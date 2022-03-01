@@ -139,6 +139,7 @@
                                     <Color red="0.624" green="0.624" blue="0.624" fx:id="x22" />
                                  </textFill>
                               </Label>
+                              <CheckBox layoutX="459.0" layoutY="47.0" mnemonicParsing="false" text="BPM" />
                            </children>
                         </AnchorPane>
                   </content>
@@ -165,12 +166,12 @@
                   <Label layoutX="125.0" layoutY="258.0" text="50 år" />
                   <Label layoutX="28.0" layoutY="281.0" text="Status" />
                   <Label layoutX="126.0" layoutY="281.0" text="OK" />
-                  <Label layoutX="14.0" layoutY="486.0" text="EKG">
+                  <Label layoutX="14.0" layoutY="486.0" text="Puls">
                      <font>
                         <Font size="25.0" />
                      </font>
                   </Label>
-                  <Label layoutX="8.0" layoutY="522.0" text="ADVARSEL" textFill="#ea0b0b">
+                  <Label layoutX="15.0" layoutY="522.0" text="180BPM" textFill="#ea0b0b">
                      <font>
                         <Font name="System Bold" size="12.0" />
                      </font></Label>
