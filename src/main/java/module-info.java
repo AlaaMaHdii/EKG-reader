@@ -6,6 +6,6 @@ module com.example.sundhed {
     requires org.kordamp.ikonli.javafx;
     requires eu.hansolo.tilesfx;
 
-    opens com.example.sundhed to javafx.fxml;
-    exports com.example.sundhed;
+    opens com.hmaar.sundhed to javafx.fxml;
+    exports com.hmaar.sundhed;
 }
