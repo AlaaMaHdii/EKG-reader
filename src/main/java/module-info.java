@@ -8,4 +8,10 @@ module com.example.sundhed {
 
     opens com.hmaar.sundhed to javafx.fxml;
     exports com.hmaar.sundhed;
+    exports com.hmaar.sundhed.controller;
+    opens com.hmaar.sundhed.controller to javafx.fxml;
+    exports com.hmaar.sundhed.model;
+    opens com.hmaar.sundhed.model to javafx.fxml;
+    exports com.hmaar.sundhed.model.interfaces;
+    opens com.hmaar.sundhed.model.interfaces to javafx.fxml;
 }

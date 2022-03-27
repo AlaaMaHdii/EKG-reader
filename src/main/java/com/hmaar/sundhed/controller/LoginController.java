@@ -1,4 +1,4 @@
-package com.hmaar.sundhed;
+package com.hmaar.sundhed.controller;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
