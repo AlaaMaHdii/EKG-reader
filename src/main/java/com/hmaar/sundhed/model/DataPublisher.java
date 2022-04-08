@@ -6,6 +6,9 @@ import com.hmaar.sundhed.model.interfaces.PulsData;
 import com.hmaar.sundhed.model.interfaces.SpO2Data;
 import com.hmaar.sundhed.model.interfaces.TempData;
 import com.hmaar.sundhed.model.recorders.EKGRecorder;
+import com.hmaar.sundhed.model.recorders.PulsRecorder;
+import com.hmaar.sundhed.model.recorders.SpO2Recorder;
+import com.hmaar.sundhed.model.recorders.TempRecorder;
 
 import java.util.ArrayList;
 
@@ -22,12 +25,14 @@ public class DataPublisher implements Subject {
 
     // recorders
     private EKGRecorder ekgRecorder;
+    private PulsRecorder pulsRecorder;
+    private SpO2Recorder spO2Recorder;
+    private TempRecorder tempRecorder;
 
     @Override
     public void registerObserver(Observer o) {
         observers.add(o);
     }
-
 
     @Override
     public void unregisterObserver(Observer o) {
@@ -42,9 +47,28 @@ public class DataPublisher implements Subject {
     }
 
     public void record(){
+
+        //ekg
         ekgRecorder = new EKGRecorder();
         ekgRecorder.setSubject(this);
         ekgRecorder.record();
+
+
+        // puls
+        pulsRecorder = new PulsRecorder();
+        pulsRecorder.setSubject(this);
+        pulsRecorder.record();
+
+        // temp
+        tempRecorder = new TempRecorder();
+        tempRecorder.setSubject(this);
+        tempRecorder.record();
+
+        // spo2
+        spO2Recorder = new SpO2Recorder();
+        spO2Recorder.setSubject(this);
+        spO2Recorder.record();
+
     }
 
 
