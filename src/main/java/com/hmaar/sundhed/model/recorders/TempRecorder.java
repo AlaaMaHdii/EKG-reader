@@ -13,7 +13,7 @@ public class TempRecorder {
                 while(true) {
                     Thread.sleep(500);
                     if (subject != null) {
-                        subject.setTempData(new Temp(Math.random(), Math.random()));
+                        subject.setTempData(new Temp(Math.random(), System.currentTimeMillis()));
                     }
                 }
             } catch (InterruptedException e) {

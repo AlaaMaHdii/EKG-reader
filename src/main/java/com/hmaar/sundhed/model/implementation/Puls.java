@@ -4,9 +4,9 @@ import com.hmaar.sundhed.model.interfaces.PulsData;
 
 public class Puls implements PulsData {
     private double puls;
-    private double time;
+    private long time;
 
-    public Puls(double puls, double time){
+    public Puls(double puls, long time){
         this.puls = puls;
         this.time = time;
     }
@@ -22,12 +22,12 @@ public class Puls implements PulsData {
     }
 
     @Override
-    public double getTime() {
+    public long getTime() {
         return time;
     }
 
     @Override
-    public void setTime(double time) {
+    public void setTime(long time) {
         this.time = time;
     }
 }

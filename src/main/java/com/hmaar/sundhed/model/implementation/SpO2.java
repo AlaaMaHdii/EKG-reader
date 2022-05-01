@@ -4,9 +4,9 @@ import com.hmaar.sundhed.model.interfaces.SpO2Data;
 
 public class SpO2 implements SpO2Data {
     private double spO2;
-    private double time;
+    private long time;
 
-    public SpO2(double spO2, double time){
+    public SpO2(double spO2, long time){
         this.spO2 = spO2;
         this.time = time;
     }
@@ -22,12 +22,12 @@ public class SpO2 implements SpO2Data {
     }
 
     @Override
-    public double getTime() {
+    public long getTime() {
         return time;
     }
 
     @Override
-    public void setTime(double time) {
+    public void setTime(long time) {
         this.time = time;
     }
 }

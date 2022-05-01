@@ -4,9 +4,9 @@ import com.hmaar.sundhed.model.interfaces.TempData;
 
 public class Temp implements TempData {
     private double temp;
-    private double time;
+    private long time;
 
-    public Temp(double temp, double time){
+    public Temp(double temp, long time){
         this.temp = temp;
         this.time = time;
     }
@@ -22,12 +22,12 @@ public class Temp implements TempData {
     }
 
     @Override
-    public double getTime() {
+    public long getTime() {
         return time;
     }
 
     @Override
-    public void setTime(double time) {
+    public void setTime(long time) {
         this.time = time;
     }
 }

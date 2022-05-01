@@ -13,7 +13,7 @@ public class SpO2Recorder {
                 while(true) {
                     Thread.sleep(500);
                     if (subject != null) {
-                        subject.setSpO2Data(new SpO2(Math.random(), Math.random()));
+                        subject.setSpO2Data(new SpO2(Math.random(), System.currentTimeMillis()));
                     }
                 }
             } catch (InterruptedException e) {

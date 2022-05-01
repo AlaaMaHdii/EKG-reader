@@ -13,7 +13,7 @@ public class PulsRecorder {
                 while(true) {
                     Thread.sleep(500);
                     if (subject != null) {
-                        subject.setPulsData(new Puls(Math.random(), Math.random()));
+                        subject.setPulsData(new Puls(Math.random(), System.currentTimeMillis()));
                     }
                 }
             } catch (InterruptedException e) {

@@ -7,21 +7,61 @@ import com.hmaar.sundhed.model.interfaces.TempData;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.chart.LineChart;
-import javafx.scene.chart.XYChart;
+import javafx.scene.chart.*;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
+import javafx.scene.paint.Color;
 
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 import java.util.ResourceBundle;
 
 
 public class DataController implements Initializable, Observer {
         @FXML
-        private LineChart<Number, Number> graph;
-        private XYChart.Series<Number, Number> pulsGraf;
-        private XYChart.Series<Number, Number> spO2Graf;
-        private XYChart.Series<Number, Number> tempGraf;
-        private XYChart.Series<Number, Number> ekgGraf;
+        private LineChart<CategoryAxis, Number> graph;
+
+        private XYChart.Series<CategoryAxis, Number> pulsGraf;
+        private XYChart.Series<CategoryAxis, Number> spO2Graf;
+        private XYChart.Series<CategoryAxis, Number> tempGraf;
+        private XYChart.Series<CategoryAxis, Number> ekgGraf;
         private DataPublisher subject;
+
+        @FXML
+        private Label loggedInLabel;
+        @FXML
+        private Label patientNavnLabel;
+        @FXML
+        private Label patientAlderLabel;
+        @FXML
+        private Label patientCprLabel;
+
+
+        // status bar
+        @FXML
+        private Label pulsLabel;
+        @FXML
+        private Label spO2Label;
+        @FXML
+        private Label tempLabel;
+        @FXML
+        private Label statusLabel;
+
+        private final Color red = Color.rgb(234,11,11);
+        private final Color yellow = Color.rgb(220,189,63);
+        private final Color green = Color.rgb(26,183,54);
+
+        // graf
+        @FXML
+        private CheckBox spO2Button;
+        @FXML
+        private CheckBox tempButton;
+        @FXML
+        private CheckBox ekgButton;
+        @FXML
+        private CheckBox pulsButton;
 
         // Den seneste data skal gemmes i disse variabler
         private EKGData ekgData;
@@ -29,12 +69,19 @@ public class DataController implements Initializable, Observer {
         private SpO2Data spO2Data;
         private TempData tempData;
 
+        public AuthenticatedUser user;
+        public Patient patient;
+
+        public Database db;
+
+
 
         @Override
         public void initialize(URL url, ResourceBundle rb) {
                 // Dummy data til grafen
                 //-154.0, -11.0, -116.0, -11.0, -107.0, -24.0, -90.0, -10.0, -75.0, -108.0, -75.0, 51.0, -62.0, -24.0, 5.0, -45.0, 76.0, -10.0
                 //graph = new LineChart<>(new NumberAxis(), new NumberAxis());
+                System.out.println(patient.getAge());
                 subject = new DataPublisher();
                 subject.registerObserver(this);
                 subject.record();
@@ -51,6 +98,7 @@ public class DataController implements Initializable, Observer {
 
                 ekgGraf = new XYChart.Series<>();
                 ekgGraf.setName("EKG");
+                //NumberAxis xAxis = (NumberAxis) graph.getXAxis();
 
                 graph.getData().add(pulsGraf);
                 graph.getData().add(spO2Graf);
@@ -66,9 +114,67 @@ public class DataController implements Initializable, Observer {
                 pulsGraf.getData().add(new XYChart.Data<>( 5, 107));
 
                  */
+                updateStaffGui();
+                updatePatientLabels();
+        }
+
+
+        public void updateStaffGui(){
+                loggedInLabel.setText("Du er nu logged ind som " + user.getFullName() + " (" + user.getRole() + ")");
+        }
+
+        public void updatePatientLabels(){
+                this.patientNavnLabel.setText(patient.getFullName());
+                this.patientAlderLabel.setText(patient.getAge() + " år");
+                this.patientCprLabel.setText(patient.getCprFormatted());
 
         }
 
+        public void checkForAnomalies(){
+
+                if(pulsData != null && pulsLabel != null) {
+                        if (pulsData.getPuls() < 50 || pulsData.getPuls() > 130) {
+                                // kritisk
+                                pulsLabel.setTextFill(red);
+                        } else if (pulsData.getPuls() < 60 || pulsData.getPuls() > 100) {
+                                // info
+                                pulsLabel.setTextFill(yellow);
+                        } else if (pulsData.getPuls() > 60 || pulsData.getPuls() < 130) {
+                                // ok
+                                pulsLabel.setTextFill(green);
+                        }
+                        pulsLabel.setText((double) Math.round(pulsData.getPuls() * 100) / 100 + "BPM");
+                }
+
+                if(tempData != null && tempLabel != null) {
+                        if (tempData.getTemp() < 36 || tempData.getTemp() > 39) {
+                                // kritisk
+                                tempLabel.setTextFill(red);
+                        } else if (tempData.getTemp() == 36 || tempData.getTemp() == 39) {
+                                // info
+                                tempLabel.setTextFill(yellow);
+                        } else if (tempData.getTemp() == 37 || tempData.getTemp() == 39) {
+                                // ok
+                                tempLabel.setTextFill(green);
+                        }
+                        tempLabel.setText((double) Math.round(tempData.getTemp() * 100) / 100 + "°C");
+                }
+
+                if(spO2Data != null && tempLabel != null) {
+                        if (spO2Data.getSpO2() < 94) {
+                                // kritisk
+                                spO2Label.setTextFill(red);
+                        } else if (spO2Data.getSpO2() >= 94 || spO2Data.getSpO2() < 96) {
+                                // info
+                                spO2Label.setTextFill(yellow);
+                        } else if (spO2Data.getSpO2() == 100 || spO2Data.getSpO2() >= 97) {
+                                // ok
+                                spO2Label.setTextFill(green);
+                        }
+                        spO2Label.setText((double) Math.round(spO2Data.getSpO2() * 100) / 100 + "%");
+                }
+
+        }
 
         @Override
         public void update(EKGData ekgData, PulsData pulsData, TempData tempData, SpO2Data spO2Data) {
@@ -78,37 +184,53 @@ public class DataController implements Initializable, Observer {
                 this.setPulsData(pulsData);
                 this.setTempData(tempData);
                 this.setSpO2Data(spO2Data);
+
+                // vis kun recent data
+                for(int i = 0; i < graph.getData().size(); i++){
+                        if(graph.getData().get(i).getData().size() > 10){
+                                int finalI = i;
+                                // denne kode køres i en thread. Vi prøver at undgå en race condition her.
+                                Platform.runLater(() -> graph.getData().get(finalI).getData().remove(0));
+                        }
+                }
+                Platform.runLater(this::checkForAnomalies);
+        }
+
+        private String convertToString(long unix){
+                Date date = new Date(unix);
+                SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
+                return formatter.format(date);
         }
 
         public void setEkgData(EKGData ekgData) {
                 // Tjek om der har været en opdatering i ekgDataet
-                if(ekgData != this.ekgData & tempGraf != null){
+                if(ekgData != this.ekgData & tempGraf != null && ekgData != null){
                         // Ændre værdien
                         this.ekgData = ekgData;
                         // Placere det nye data i serien.
 
-                        Platform.runLater(() -> ekgGraf.getData().add(new XYChart.Data<>( ekgData.getTime(),ekgData.getVoltage())));
+                        Platform.runLater(() -> ekgGraf.getData().add(new XYChart.Data(convertToString(ekgData.getTime()), ekgData.getVoltage())));
                 }
         }
 
         public void setPulsData(PulsData pulsData) {
-                if(pulsData != this.pulsData & pulsGraf != null){
+                if(pulsData != this.pulsData & pulsGraf != null && pulsData != null){
                         this.pulsData = pulsData;
-                        Platform.runLater(() -> pulsGraf.getData().add(new XYChart.Data<>(pulsData.getTime(), pulsData.getPuls())));
+                        Platform.runLater(() -> pulsGraf.getData().add(new XYChart.Data(convertToString(pulsData.getTime()), pulsData.getPuls())));
                 }
         }
 
         public void setSpO2Data(SpO2Data spO2Data) {
-                if(spO2Data != this.spO2Data & spO2Graf != null){
+                if(spO2Data != this.spO2Data & spO2Graf != null && spO2Data != null){
                         this.spO2Data = spO2Data;
-                        Platform.runLater(() -> spO2Graf.getData().add(new XYChart.Data<>( spO2Data.getTime(),spO2Data.getSpO2())));
+                        Platform.runLater(() -> spO2Graf.getData().add(new XYChart.Data(convertToString(spO2Data.getTime()),spO2Data.getSpO2())));
                 }
         }
 
         public void setTempData(TempData tempData) {
-                if(tempData != this.tempData & tempGraf != null){
+                if(tempData != this.tempData & tempGraf != null && tempData != null){
                         this.tempData = tempData;
-                        Platform.runLater(() -> tempGraf.getData().add(new XYChart.Data<>( tempData.getTime(), tempData.getTemp())));
+                        Platform.runLater(() -> tempGraf.getData().add(new XYChart.Data(convertToString(tempData.getTime()), tempData.getTemp())));
                 }
         }
 }

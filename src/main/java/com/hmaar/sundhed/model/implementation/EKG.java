@@ -4,9 +4,9 @@ import com.hmaar.sundhed.model.interfaces.EKGData;
 
 public class EKG implements EKGData {
     private double voltage;
-    private double time;
+    private long time;
 
-    public EKG(double voltage, double time) {
+    public EKG(double voltage, long time) {
         this.time=time;
         this.voltage=voltage;
 
@@ -23,12 +23,12 @@ public class EKG implements EKGData {
     }
 
     @Override
-    public double getTime() {
+    public long getTime() {
         return time;
     }
 
     @Override
-    public void setTime(double time) {
+    public void setTime(long time) {
         this.time = time;
     }
 }
