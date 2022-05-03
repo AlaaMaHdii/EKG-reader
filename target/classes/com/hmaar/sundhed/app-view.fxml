@@ -49,19 +49,6 @@
             <MenuItem mnemonicParsing="false" text="Find patient" />
                   <SeparatorMenuItem mnemonicParsing="false" />
                   <MenuItem mnemonicParsing="false" text="Opret patient" />
-            <MenuItem mnemonicParsing="false" text="Opret kommentar" />
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" text="Log ud" />
-                  <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" text="Afslut" />
-          </items>
-        </Menu>
-        <Menu mnemonicParsing="false" text="Opstilling">
-          <items>
-            <MenuItem mnemonicParsing="false" text="Ændre patient" />
-            <MenuItem mnemonicParsing="false" text="Forbind til sensor" />
-            <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem mnemonicParsing="false" text="Ændre kommentar" />
           </items>
         </Menu>
         <Menu mnemonicParsing="false" text="Hjælp">
@@ -94,7 +81,7 @@
                                   <TableColumn fx:id="colComment" minWidth="0.0" prefWidth="319.2000427246094" text="Kommentar" />
                                 </columns>
                               </TableView>
-                              <Button layoutX="496.0" layoutY="41.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="132.0" text="Tilføj kommentar" />
+                              <Button layoutX="555.0" layoutY="53.0" mnemonicParsing="false" onAction="#loadDataToTable" text="Genindlæs" />
                            </children>
                         </AnchorPane>
                   </content>
@@ -111,9 +98,9 @@
                                   <NumberAxis side="LEFT" />
                                 </yAxis>
                               </LineChart>
-                              <CheckBox fx:id="spO2Button" layoutX="207.0" layoutY="47.0" mnemonicParsing="false" onAction="#toggleSeries" selected="true" text="SpO2" />
-                              <CheckBox fx:id="tempButton" layoutX="272.0" layoutY="47.0" mnemonicParsing="false" onAction="#toggleSeries" selected="true" text="Temperatur" />
-                              <CheckBox fx:id="ekgButton" layoutX="368.0" layoutY="47.0" mnemonicParsing="false" onAction="#toggleSeries" selected="true" text="EKG" />
+                              <CheckBox fx:id="spO2Button" layoutX="207.0" layoutY="47.0" mnemonicParsing="false" onAction="#toggleSeriesRealTime" selected="true" text="SpO2" />
+                              <CheckBox fx:id="tempButton" layoutX="272.0" layoutY="47.0" mnemonicParsing="false" onAction="#toggleSeriesRealTime" selected="true" text="Temperatur" />
+                              <CheckBox fx:id="ekgButton" layoutX="368.0" layoutY="47.0" mnemonicParsing="false" onAction="#toggleSeriesRealTime" selected="true" text="EKG" />
                               <Label alignment="CENTER" layoutX="24.0" layoutY="14.0" style="&#10;" text="Målinger" textAlignment="CENTER" wrapText="false">
                                  <font>
                                     <Font size="18.0" fx:id="x12" />
@@ -122,11 +109,41 @@
                                     <Color red="0.624" green="0.624" blue="0.624" fx:id="x22" />
                                  </textFill>
                               </Label>
-                              <CheckBox fx:id="pulsButton" layoutX="424.0" layoutY="47.0" mnemonicParsing="false" onAction="#toggleSeries" selected="true" text="Puls" />
+                              <CheckBox fx:id="pulsButton" layoutX="424.0" layoutY="47.0" mnemonicParsing="false" onAction="#toggleSeriesRealTime" selected="true" text="Puls" />
                            </children>
                         </AnchorPane>
                   </content>
                 </Tab>
+                  <Tab text="Historik">
+                     <content>
+                        <AnchorPane fx:id="" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <LineChart fx:id="graph1" layoutX="31.0" layoutY="86.0" prefHeight="400.0" prefWidth="600.0">
+                                 <xAxis>
+                                    <CategoryAxis side="BOTTOM" />
+                                 </xAxis>
+                                 <yAxis>
+                                    <NumberAxis side="LEFT" />
+                                 </yAxis>
+                              </LineChart>
+                              <CheckBox fx:id="spO2Button1" layoutX="207.0" layoutY="47.0" mnemonicParsing="false" onAction="#toggleSeriesHistoric" selected="true" text="SpO2" />
+                              <CheckBox fx:id="tempButton1" layoutX="272.0" layoutY="47.0" mnemonicParsing="false" onAction="#toggleSeriesHistoric" selected="true" text="Temperatur" />
+                              <CheckBox fx:id="ekgButton1" layoutX="368.0" layoutY="47.0" mnemonicParsing="false" onAction="#toggleSeriesHistoric" selected="true" text="EKG" />
+                              <Label alignment="CENTER" layoutX="24.0" layoutY="14.0" style="&#10;" text="Historisk data" textAlignment="CENTER" wrapText="false">
+                                 <font>
+                                    <Font size="18.0" fx:id="x121" />
+                                 </font>
+                                 <textFill>
+                                    <Color red="0.624" green="0.624" blue="0.624" fx:id="x221" />
+                                 </textFill>
+                              </Label>
+                              <CheckBox fx:id="pulsButton1" layoutX="424.0" layoutY="47.0" mnemonicParsing="false" onAction="#toggleSeriesHistoric" selected="true" text="Puls" />
+                              <DatePicker fx:id="fraDate" layoutX="184.0" layoutY="15.0" onAction="#dateChanged" promptText="Fra" />
+                              <DatePicker fx:id="tilDate" layoutX="405.0" layoutY="15.0" onAction="#dateChanged" promptText="Til" />
+                           </children>
+                        </AnchorPane>
+                     </content>
+                  </Tab>
               </tabs>
             </TabPane>
         <AnchorPane prefHeight="551.0" prefWidth="202.0">

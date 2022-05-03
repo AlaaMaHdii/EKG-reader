@@ -17,14 +17,16 @@ import javafx.scene.paint.Color;
 
 import java.net.URL;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-import java.util.ResourceBundle;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.util.*;
 
 
 public class DataController implements Initializable, Observer {
+        // Realtime data
         @FXML
         private LineChart<CategoryAxis, Number> graph;
+
 
         private XYChart.Series<CategoryAxis, Number> pulsGraf;
         private XYChart.Series<CategoryAxis, Number> spO2Graf;
@@ -32,6 +34,14 @@ public class DataController implements Initializable, Observer {
         private XYChart.Series<CategoryAxis, Number> ekgGraf;
         private DataPublisher subject;
 
+        // Historisk data
+        @FXML
+        private LineChart<CategoryAxis, Number> graph1;
+        private XYChart.Series<CategoryAxis, Number> pulsGraf1;
+        private XYChart.Series<CategoryAxis, Number> spO2Graf1;
+        private XYChart.Series<CategoryAxis, Number> tempGraf1;
+        private XYChart.Series<CategoryAxis, Number> ekgGraf1;
+        private DataPublisher subject1;
         @FXML
         private Label loggedInLabel;
         @FXML
@@ -40,6 +50,12 @@ public class DataController implements Initializable, Observer {
         private Label patientAlderLabel;
         @FXML
         private Label patientCprLabel;
+
+        @FXML
+        private DatePicker tilDate;
+
+        @FXML
+        private DatePicker fraDate;
 
 
         // status bar
@@ -65,6 +81,14 @@ public class DataController implements Initializable, Observer {
         private CheckBox ekgButton;
         @FXML
         private CheckBox pulsButton;
+        @FXML
+        private CheckBox spO2Button1;
+        @FXML
+        private CheckBox tempButton1;
+        @FXML
+        private CheckBox ekgButton1;
+        @FXML
+        private CheckBox pulsButton1;
 
         // tabel
         public static TableView<Comments> TableInfo;
@@ -94,7 +118,8 @@ public class DataController implements Initializable, Observer {
                 // Dummy data til grafen
                 //-154.0, -11.0, -116.0, -11.0, -107.0, -24.0, -90.0, -10.0, -75.0, -108.0, -75.0, 51.0, -62.0, -24.0, 5.0, -45.0, 76.0, -10.0
                 //graph = new LineChart<>(new NumberAxis(), new NumberAxis());
-                System.out.println(patient.getAge());
+
+                // Historic
                 subject = new DataPublisher();
                 subject.registerObserver(this);
                 subject.record();
@@ -118,15 +143,28 @@ public class DataController implements Initializable, Observer {
                 graph.getData().add(tempGraf);
                 graph.getData().add(ekgGraf);
 
-                /* Dummy data
+                // Historic
+                graph1.setTitle("Historisk Data");
+                pulsGraf1 = new XYChart.Series<>();
+                pulsGraf1.setName("Puls");
 
-                pulsGraf.getData().add(new XYChart.Data<>( 1, 100));
-                pulsGraf.getData().add(new XYChart.Data<>( 2, 105));
-                pulsGraf.getData().add(new XYChart.Data<>( 3, 103));
-                pulsGraf.getData().add(new XYChart.Data<>( 4, 104));
-                pulsGraf.getData().add(new XYChart.Data<>( 5, 107));
+                spO2Graf1 = new XYChart.Series<>();
+                spO2Graf1.setName("SpO2");
 
-                 */
+                tempGraf1 = new XYChart.Series<>();
+                tempGraf1.setName("Temperatur");
+
+                ekgGraf1 = new XYChart.Series<>();
+                ekgGraf1.setName("EKG");
+                //NumberAxis xAxis = (NumberAxis) graph.getXAxis();
+
+                graph1.getData().add(pulsGraf1);
+                graph1.getData().add(spO2Graf1);
+                graph1.getData().add(tempGraf1);
+                graph1.getData().add(ekgGraf1);
+                graph.setAnimated(false);
+                graph1.setAnimated(false);
+
                 updateStaffGui();
                 updatePatientLabels();
                 initCol();
@@ -134,21 +172,34 @@ public class DataController implements Initializable, Observer {
                 enableEditOnTable();
         }
 
+        public void dateChanged(){
+                if(fraDate.getValue() != null & tilDate.getValue() != null){
+                        Date dateStart = Date.from(Instant.from(fraDate.getValue().atStartOfDay(ZoneId.systemDefault())));
+                        Date dateEnd = Date.from(Instant.from(tilDate.getValue().atStartOfDay(ZoneId.systemDefault())));
+                        ArrayList<Log> logs = patient.getLogs(dateStart, dateEnd);
+                        for (Log log: logs) {
+                                switch (log.getType()) {
+                                        case "Puls" -> setPulsDataHistoric(log.generatePuls());
+                                        case "EKG" -> setEkgDataHistoric(log.generateEkg());
+                                        case "Temp" -> setTempDataHistoric(log.generateTemp());
+                                        case "SpO2" -> setSpO2DataHistoric(log.generateSpO2());
+                                        default -> throw new IllegalArgumentException("Unkonwn type: " + log.getType());
+                                }
+                        }
+                }
+
+        }
 
         private void initCol(){
-                colType.setCellValueFactory(new PropertyValueFactory<>("type"));
+                colType.setCellValueFactory(new PropertyValueFactory<>("warning"));
                 colComment.setCellValueFactory(new PropertyValueFactory<>("comment"));
                 colTime.setCellValueFactory(new PropertyValueFactory<>("timestamp"));
         }
 
-        private void loadDataToTable(){
-                dataTable = FXCollections.observableArrayList();
-
-                for(int x=1;x< 12;x++){
-                        dataTable.add(new Comments(1, 1, 1, "Kunden er syg", "Puls er kritisk", 180.00, new java.sql.Date(2022, 5, 2), db));
-                }
-
-                logTabel.setItems(dataTable);
+        public void loadDataToTable(){
+                ArrayList<Comments> warnings = patient.getWarnings();
+                logTabel.getItems().clear();
+                logTabel.getItems().addAll(warnings);
         }
 
         private void enableEditOnTable(){
@@ -163,7 +214,7 @@ public class DataController implements Initializable, Observer {
         }
 
         public void updateStaffGui(){
-                loggedInLabel.setText("Du er nu logged ind som " + user.getFullName() + " (" + user.getRole() + ")");
+                loggedInLabel.setText("Du er nu logget ind som " + user.getFullName() + " (" + user.getRole() + ")");
         }
 
         public void updatePatientLabels(){
@@ -174,7 +225,7 @@ public class DataController implements Initializable, Observer {
         }
 
 
-        public void toggleSeries(){
+        public void toggleSeriesRealTime(){
                 boolean showSpO2 = spO2Button.isSelected();
                 boolean showTemp = tempButton.isSelected();
                 boolean showEkg = ekgButton.isSelected();
@@ -202,7 +253,39 @@ public class DataController implements Initializable, Observer {
                         if (showPuls) {
                                 graph.getData().add(pulsGraf);
                         }
-                        graph.setAnimated(true);
+                        //graph.setAnimated(true);
+                });
+        }
+
+        public void toggleSeriesHistoric(){
+                boolean showSpO2 = spO2Button1.isSelected();
+                boolean showTemp = tempButton1.isSelected();
+                boolean showEkg = ekgButton1.isSelected();
+                boolean showPuls = pulsButton1.isSelected();
+                Platform.runLater(() -> {
+
+
+                        // Lang historie kort, der sker en race condition, da animation foregår asynkront https://bugs.openjdk.java.net/browse/JDK-8125967
+                        graph1.setAnimated(false);
+                        graph1.getData().clear();
+                        ;
+
+                        if (showSpO2) {
+                                graph1.getData().add(spO2Graf1);
+                        }
+
+                        if (showTemp) {
+                                graph1.getData().add(tempGraf1);
+                        }
+
+                        if (showEkg) {
+                                graph1.getData().add(ekgGraf1);
+                        }
+
+                        if (showPuls) {
+                                graph1.getData().add(pulsGraf1);
+                        }
+                        //graph1.setAnimated(true);
                 });
         }
         public void checkForAnomalies(){
@@ -268,7 +351,7 @@ public class DataController implements Initializable, Observer {
                                 Platform.runLater(() -> {
                                         graph.setAnimated(false);
                                         graph.getData().get(finalI).getData().remove(0);
-                                        graph.setAnimated(true);
+                                        //graph.setAnimated(true);
                                 });
                         }
                 }
@@ -276,7 +359,7 @@ public class DataController implements Initializable, Observer {
         }
 
         private String convertToString(long unix){
-                Date date = new Date(unix);
+                Date date = new java.sql.Date(unix);
                 SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
                 return formatter.format(date);
         }
@@ -310,6 +393,33 @@ public class DataController implements Initializable, Observer {
                 if(tempData != this.tempData & tempGraf != null && tempData != null){
                         this.tempData = tempData;
                         Platform.runLater(() -> tempGraf.getData().add(new XYChart.Data(convertToString(tempData.getTime()), tempData.getTemp())));
+                }
+        }
+
+
+        // Historic graph
+        public void setEkgDataHistoric(EKGData ekgData) {
+                // Tjek om der har været en opdatering i ekgDataet
+                if( tempGraf1 != null && ekgData != null){
+                        Platform.runLater(() -> ekgGraf1.getData().add(new XYChart.Data(convertToString(ekgData.getTime()), ekgData.getVoltage())));
+                }
+        }
+
+        public void setPulsDataHistoric(PulsData pulsData) {
+                if(pulsGraf != null && pulsData != null){
+                        Platform.runLater(() -> pulsGraf1.getData().add(new XYChart.Data(convertToString(pulsData.getTime()), pulsData.getPuls())));
+                }
+        }
+
+        public void setSpO2DataHistoric(SpO2Data spO2Data) {
+                if(spO2Graf1 != null && spO2Data != null){
+                        Platform.runLater(() -> spO2Graf1.getData().add(new XYChart.Data(convertToString(spO2Data.getTime()),spO2Data.getSpO2())));
+                }
+        }
+
+        public void setTempDataHistoric(TempData tempData) {
+                if(tempGraf1 != null && tempData != null){
+                        Platform.runLater(() -> tempGraf1.getData().add(new XYChart.Data(convertToString(tempData.getTime()), tempData.getTemp())));
                 }
         }
 }

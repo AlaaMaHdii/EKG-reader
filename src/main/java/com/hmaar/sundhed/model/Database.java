@@ -1,6 +1,7 @@
 package com.hmaar.sundhed.model;
 
 import java.sql.*;
+import java.util.ArrayList;
 
 public class Database {
     Connection conn;
@@ -52,4 +53,59 @@ public class Database {
         }
         return null;
     }
+
+    public boolean updateComment(int id, String newComment) throws SQLException {
+        PreparedStatement pstmt = this.conn.prepareStatement("UPDATE warnings SET comment = ? WHERE id = ?;");
+        pstmt.setString(1, newComment);
+        pstmt.setInt(2, id);
+        return pstmt.execute();
+    }
+
+    public ArrayList<Comments> getWarningsByPatientId(int patientId) throws SQLException {
+        PreparedStatement pstmt = this.conn.prepareStatement("SELECT * FROM warnings WHERE patientId = ?");
+        pstmt.setInt(1, patientId);
+        ResultSet result = pstmt.executeQuery();
+
+
+        ArrayList<Comments> warnings = new ArrayList<Comments>();
+
+        while(result.next()) {   // Move the cursor to the next row
+            int id  = result.getInt(1);
+            //int patientId  = result.getInt(2);
+            int staffWhoLogged  = result.getInt(3);
+            String warning = result.getString(4);
+            String comment = result.getString(5);
+            Date timestamp = result.getDate(6);
+            double value = result.getDouble(7);
+
+            warnings.add(new Comments(id, patientId, staffWhoLogged, comment, warning, value, timestamp, this));
+        }
+
+        return warnings;
+    }
+
+
+    public ArrayList<Log> getDataByPatientId(int patientId, java.util.Date startDate, java.util.Date endDate) throws SQLException {
+        PreparedStatement pstmt = this.conn.prepareStatement("SELECT * FROM logging WHERE patientId = ? AND timestamp BETWEEN ? AND ?");
+        pstmt.setInt(1, patientId);
+        pstmt.setDate(2, new java.sql.Date(startDate.getTime()));
+        pstmt.setDate(3, new java.sql.Date(endDate.getTime()));
+        ResultSet result = pstmt.executeQuery();
+
+        ArrayList<Log> logs = new ArrayList<Log>();
+
+        while(result.next()) {   // Move the cursor to the next row
+            int id  = result.getInt(1);
+            //int patientId  = result.getInt(2);
+            int staffWhoLogged  = result.getInt(3);
+            String type = result.getString(4);
+            double value = result.getDouble(5);
+            Date timestamp = result.getDate(6);
+
+            logs.add(new Log(id, patientId, staffWhoLogged, type, value, timestamp));
+        }
+
+        return logs;
+    }
+
 }

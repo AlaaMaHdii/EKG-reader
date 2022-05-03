@@ -2,13 +2,14 @@ package com.hmaar.sundhed.model;
 
 
 import java.sql.Date;
+import java.sql.SQLException;
 
 public class Comments {
     int id;
     int patientId;
     int staffWhoLogged;
     String comment;
-    String type;
+    String warning;
 
     double value;
     Date timestamp;
@@ -20,15 +21,20 @@ public class Comments {
     }
 
     public void setComment(String comment) {
+        try {
+            db.updateComment(id, comment);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
         this.comment = comment;
     }
 
-    public Comments(int id, int patientId, int staffWhoLogged, String comment, String type, double value, Date timestamp, Database db) {
+    public Comments(int id, int patientId, int staffWhoLogged, String comment, String warning, double value, Date timestamp, Database db) {
         this.id = id;
         this.patientId = patientId;
         this.staffWhoLogged = staffWhoLogged;
         this.comment = comment;
-        this.type = type;
+        this.warning = warning;
         this.value = value;
         this.timestamp = timestamp;
         this.db = db;
@@ -58,12 +64,12 @@ public class Comments {
         this.staffWhoLogged = staffWhoLogged;
     }
 
-    public String getType() {
-        return type;
+    public String getWarning() {
+        return warning;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setWarning(String warning) {
+        this.warning = warning;
     }
 
     public double getValue() {

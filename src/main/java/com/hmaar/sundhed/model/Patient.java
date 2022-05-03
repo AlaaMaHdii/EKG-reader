@@ -1,12 +1,14 @@
 package com.hmaar.sundhed.model;
 
 import java.nio.file.FileAlreadyExistsException;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.Temporal;
+import java.util.ArrayList;
 import java.util.Date;
 
 public class Patient {
@@ -63,4 +65,19 @@ public class Patient {
         this.fullName = fullName;
     }
 
+    public ArrayList<Comments> getWarnings(){
+        try {
+            return db.getWarningsByPatientId(id);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    };
+
+    public ArrayList<Log> getLogs(Date startDate, Date endDate){
+        try {
+            return db.getDataByPatientId(id, startDate, endDate);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
