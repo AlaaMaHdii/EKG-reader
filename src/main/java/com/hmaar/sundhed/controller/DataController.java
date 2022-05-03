@@ -5,11 +5,14 @@ import com.hmaar.sundhed.model.interfaces.PulsData;
 import com.hmaar.sundhed.model.interfaces.SpO2Data;
 import com.hmaar.sundhed.model.interfaces.TempData;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.*;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.paint.Color;
 
 import java.net.URL;
@@ -62,6 +65,16 @@ public class DataController implements Initializable, Observer {
         private CheckBox ekgButton;
         @FXML
         private CheckBox pulsButton;
+
+        // tabel
+        public static TableView<Comments> TableInfo;
+        public static ObservableList<Comments> dataTable;
+        @FXML
+        private TableView<Comments> logTabel;
+        @FXML
+        private TableColumn<Comments, String> colTime, colType, colComment;
+        @FXML
+        private TableColumn<Comments, Button> colUpdate;
 
         // Den seneste data skal gemmes i disse variabler
         private EKGData ekgData;
@@ -116,8 +129,38 @@ public class DataController implements Initializable, Observer {
                  */
                 updateStaffGui();
                 updatePatientLabels();
+                initCol();
+                loadDataToTable();
+                enableEditOnTable();
         }
 
+
+        private void initCol(){
+                colType.setCellValueFactory(new PropertyValueFactory<>("type"));
+                colComment.setCellValueFactory(new PropertyValueFactory<>("comment"));
+                colTime.setCellValueFactory(new PropertyValueFactory<>("timestamp"));
+        }
+
+        private void loadDataToTable(){
+                dataTable = FXCollections.observableArrayList();
+
+                for(int x=1;x< 12;x++){
+                        dataTable.add(new Comments(1, 1, 1, "Kunden er syg", "Puls er kritisk", 180.00, new java.sql.Date(2022, 5, 2), db));
+                }
+
+                logTabel.setItems(dataTable);
+        }
+
+        private void enableEditOnTable(){
+                colComment.setCellFactory(TextFieldTableCell.forTableColumn());
+                colComment.setOnEditCommit(e->{
+                        String newComment = e.getNewValue();
+                        Comments comment = e.getTableView().getItems().get(e.getTablePosition().getRow());
+                        comment.setComment(newComment);
+                });
+
+                logTabel.setEditable(true);
+        }
 
         public void updateStaffGui(){
                 loggedInLabel.setText("Du er nu logged ind som " + user.getFullName() + " (" + user.getRole() + ")");
@@ -130,6 +173,38 @@ public class DataController implements Initializable, Observer {
 
         }
 
+
+        public void toggleSeries(){
+                boolean showSpO2 = spO2Button.isSelected();
+                boolean showTemp = tempButton.isSelected();
+                boolean showEkg = ekgButton.isSelected();
+                boolean showPuls = pulsButton.isSelected();
+                Platform.runLater(() -> {
+
+
+                        // Lang historie kort, der sker en race condition, da animation foregår asynkront https://bugs.openjdk.java.net/browse/JDK-8125967
+                        graph.setAnimated(false);
+                        graph.getData().clear();
+;
+
+                        if (showSpO2) {
+                                graph.getData().add(spO2Graf);
+                        }
+
+                        if (showTemp) {
+                                graph.getData().add(tempGraf);
+                        }
+
+                        if (showEkg) {
+                                graph.getData().add(ekgGraf);
+                        }
+
+                        if (showPuls) {
+                                graph.getData().add(pulsGraf);
+                        }
+                        graph.setAnimated(true);
+                });
+        }
         public void checkForAnomalies(){
 
                 if(pulsData != null && pulsLabel != null) {
@@ -187,10 +262,14 @@ public class DataController implements Initializable, Observer {
 
                 // vis kun recent data
                 for(int i = 0; i < graph.getData().size(); i++){
-                        if(graph.getData().get(i).getData().size() > 10){
+                        if(graph.getData().get(i).getData().size() > 40){
                                 int finalI = i;
                                 // denne kode køres i en thread. Vi prøver at undgå en race condition her.
-                                Platform.runLater(() -> graph.getData().get(finalI).getData().remove(0));
+                                Platform.runLater(() -> {
+                                        graph.setAnimated(false);
+                                        graph.getData().get(finalI).getData().remove(0);
+                                        graph.setAnimated(true);
+                                });
                         }
                 }
                 Platform.runLater(this::checkForAnomalies);

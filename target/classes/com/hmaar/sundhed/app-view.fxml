@@ -87,11 +87,11 @@
                                     <Color red="0.624" green="0.624" blue="0.624" fx:id="x21" />
                                  </textFill>
                               </Label>
-                              <TableView layoutX="34.0" layoutY="86.0" prefHeight="401.0" prefWidth="594.0">
+                              <TableView fx:id="logTabel" layoutX="34.0" layoutY="86.0" prefHeight="401.0" prefWidth="594.0">
                                 <columns>
-                                  <TableColumn prefWidth="124.00000381469727" text="Tidspunkt" />
-                                  <TableColumn minWidth="0.0" prefWidth="149.59986877441406" text="Hændelse" />
-                                    <TableColumn minWidth="0.0" prefWidth="319.2000427246094" text="Kommentar" />
+                                  <TableColumn fx:id="colTime" prefWidth="124.00000381469727" text="Tidspunkt" />
+                                  <TableColumn fx:id="colType" minWidth="0.0" prefWidth="149.59986877441406" text="Hændelse" />
+                                  <TableColumn fx:id="colComment" minWidth="0.0" prefWidth="319.2000427246094" text="Kommentar" />
                                 </columns>
                               </TableView>
                               <Button layoutX="496.0" layoutY="41.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="132.0" text="Tilføj kommentar" />
@@ -111,9 +111,9 @@
                                   <NumberAxis side="LEFT" />
                                 </yAxis>
                               </LineChart>
-                              <CheckBox fx:id="spO2Button" layoutX="207.0" layoutY="47.0" mnemonicParsing="false" selected="true" text="SpO2" />
-                              <CheckBox fx:id="tempButton" layoutX="272.0" layoutY="47.0" mnemonicParsing="false" selected="true" text="Temperatur" />
-                              <CheckBox fx:id="ekgButton" layoutX="368.0" layoutY="47.0" mnemonicParsing="false" selected="true" text="EKG" />
+                              <CheckBox fx:id="spO2Button" layoutX="207.0" layoutY="47.0" mnemonicParsing="false" onAction="#toggleSeries" selected="true" text="SpO2" />
+                              <CheckBox fx:id="tempButton" layoutX="272.0" layoutY="47.0" mnemonicParsing="false" onAction="#toggleSeries" selected="true" text="Temperatur" />
+                              <CheckBox fx:id="ekgButton" layoutX="368.0" layoutY="47.0" mnemonicParsing="false" onAction="#toggleSeries" selected="true" text="EKG" />
                               <Label alignment="CENTER" layoutX="24.0" layoutY="14.0" style="&#10;" text="Målinger" textAlignment="CENTER" wrapText="false">
                                  <font>
                                     <Font size="18.0" fx:id="x12" />
@@ -122,7 +122,7 @@
                                     <Color red="0.624" green="0.624" blue="0.624" fx:id="x22" />
                                  </textFill>
                               </Label>
-                              <CheckBox fx:id="pulsButton" layoutX="424.0" layoutY="47.0" mnemonicParsing="false" selected="true" text="Puls" />
+                              <CheckBox fx:id="pulsButton" layoutX="424.0" layoutY="47.0" mnemonicParsing="false" onAction="#toggleSeries" selected="true" text="Puls" />
                            </children>
                         </AnchorPane>
                   </content>

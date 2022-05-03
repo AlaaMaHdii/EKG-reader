@@ -11,7 +11,7 @@ import java.util.Date;
 
 public class Patient {
     public String cpr;
-    private int id;
+    public int id;
     public String fullName;
 
     private Database db;

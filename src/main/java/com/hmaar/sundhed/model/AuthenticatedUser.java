@@ -4,7 +4,7 @@ import java.util.Objects;
 
 public class AuthenticatedUser {
     private Database db;
-    private int id;
+    public int id;
     public String cpr;
 
     public String getCpr() {
