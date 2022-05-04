@@ -293,9 +293,11 @@ public class DataController implements Initializable, Observer {
                 if(pulsData != null && pulsLabel != null) {
                         if (pulsData.getPuls() < 50 || pulsData.getPuls() > 130) {
                                 // kritisk
+                                user.uploadWarning(patient.getId(), "Puls er kritisk: " + (double) Math.round(pulsData.getPuls() * 100) / 100 + "BPM", "", pulsData.getPuls(), this);
                                 pulsLabel.setTextFill(red);
                         } else if (pulsData.getPuls() < 60 || pulsData.getPuls() > 100) {
                                 // info
+                                user.uploadWarning(patient.getId(), "Puls er unormal: " + (double) Math.round(pulsData.getPuls() * 100) / 100 + "BPM", "", pulsData.getPuls(), this);
                                 pulsLabel.setTextFill(yellow);
                         } else if (pulsData.getPuls() > 60 || pulsData.getPuls() < 130) {
                                 // ok
@@ -307,8 +309,10 @@ public class DataController implements Initializable, Observer {
                 if(tempData != null && tempLabel != null) {
                         if (tempData.getTemp() < 36 || tempData.getTemp() > 39) {
                                 // kritisk
+                                user.uploadWarning(patient.getId(), "Temperatur er kritisk: " + (double) Math.round(tempData.getTemp() * 100) / 100 + "°C", "", tempData.getTemp(), this);
                                 tempLabel.setTextFill(red);
                         } else if (tempData.getTemp() == 36 || tempData.getTemp() == 39) {
+                                user.uploadWarning(patient.getId(), "Temperatur er unormal: " + (double) Math.round(tempData.getTemp() * 100) / 100 + "°C", "", tempData.getTemp(), this);
                                 // info
                                 tempLabel.setTextFill(yellow);
                         } else if (tempData.getTemp() == 37 || tempData.getTemp() == 39) {
@@ -321,8 +325,10 @@ public class DataController implements Initializable, Observer {
                 if(spO2Data != null && tempLabel != null) {
                         if (spO2Data.getSpO2() < 94) {
                                 // kritisk
+                                user.uploadWarning(patient.getId(), "SpO2 er kritisk: " + (double) Math.round(spO2Data.getSpO2() * 100) / 100 + "%", "", spO2Data.getSpO2(), this);
                                 spO2Label.setTextFill(red);
                         } else if (spO2Data.getSpO2() >= 94 || spO2Data.getSpO2() < 96) {
+                                user.uploadWarning(patient.getId(), "SpO2 er unormal: " + (double) Math.round(spO2Data.getSpO2() * 100) / 100 + "%", "", spO2Data.getSpO2(),this);
                                 // info
                                 spO2Label.setTextFill(yellow);
                         } else if (spO2Data.getSpO2() == 100 || spO2Data.getSpO2() >= 97) {
@@ -364,6 +370,11 @@ public class DataController implements Initializable, Observer {
                 return formatter.format(date);
         }
 
+        private String convertToStringHistoric(long unix){
+                Date date = new java.sql.Date(unix);
+                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+                return formatter.format(date);
+        }
         public void setEkgData(EKGData ekgData) {
                 // Tjek om der har været en opdatering i ekgDataet
                 if(ekgData != this.ekgData & tempGraf != null && ekgData != null){
@@ -372,6 +383,7 @@ public class DataController implements Initializable, Observer {
                         // Placere det nye data i serien.
 
                         Platform.runLater(() -> ekgGraf.getData().add(new XYChart.Data(convertToString(ekgData.getTime()), ekgData.getVoltage())));
+                        user.uploadLog(patient.getId(), ekgData);
                 }
         }
 
@@ -379,6 +391,7 @@ public class DataController implements Initializable, Observer {
                 if(pulsData != this.pulsData & pulsGraf != null && pulsData != null){
                         this.pulsData = pulsData;
                         Platform.runLater(() -> pulsGraf.getData().add(new XYChart.Data(convertToString(pulsData.getTime()), pulsData.getPuls())));
+                        user.uploadLog(patient.getId(), pulsData);
                 }
         }
 
@@ -386,6 +399,7 @@ public class DataController implements Initializable, Observer {
                 if(spO2Data != this.spO2Data & spO2Graf != null && spO2Data != null){
                         this.spO2Data = spO2Data;
                         Platform.runLater(() -> spO2Graf.getData().add(new XYChart.Data(convertToString(spO2Data.getTime()),spO2Data.getSpO2())));
+                        user.uploadLog(patient.getId(), spO2Data);
                 }
         }
 
@@ -393,6 +407,7 @@ public class DataController implements Initializable, Observer {
                 if(tempData != this.tempData & tempGraf != null && tempData != null){
                         this.tempData = tempData;
                         Platform.runLater(() -> tempGraf.getData().add(new XYChart.Data(convertToString(tempData.getTime()), tempData.getTemp())));
+                        user.uploadLog(patient.getId(), tempData);
                 }
         }
 
@@ -401,25 +416,25 @@ public class DataController implements Initializable, Observer {
         public void setEkgDataHistoric(EKGData ekgData) {
                 // Tjek om der har været en opdatering i ekgDataet
                 if( tempGraf1 != null && ekgData != null){
-                        Platform.runLater(() -> ekgGraf1.getData().add(new XYChart.Data(convertToString(ekgData.getTime()), ekgData.getVoltage())));
+                        Platform.runLater(() -> ekgGraf1.getData().add(new XYChart.Data(convertToStringHistoric(ekgData.getTime()), ekgData.getVoltage())));
                 }
         }
 
         public void setPulsDataHistoric(PulsData pulsData) {
-                if(pulsGraf != null && pulsData != null){
-                        Platform.runLater(() -> pulsGraf1.getData().add(new XYChart.Data(convertToString(pulsData.getTime()), pulsData.getPuls())));
+                if(pulsGraf1 != null && pulsData != null){
+                        Platform.runLater(() -> pulsGraf1.getData().add(new XYChart.Data(convertToStringHistoric(pulsData.getTime()), pulsData.getPuls())));
                 }
         }
 
         public void setSpO2DataHistoric(SpO2Data spO2Data) {
                 if(spO2Graf1 != null && spO2Data != null){
-                        Platform.runLater(() -> spO2Graf1.getData().add(new XYChart.Data(convertToString(spO2Data.getTime()),spO2Data.getSpO2())));
+                        Platform.runLater(() -> spO2Graf1.getData().add(new XYChart.Data(convertToStringHistoric(spO2Data.getTime()),spO2Data.getSpO2())));
                 }
         }
 
         public void setTempDataHistoric(TempData tempData) {
                 if(tempGraf1 != null && tempData != null){
-                        Platform.runLater(() -> tempGraf1.getData().add(new XYChart.Data(convertToString(tempData.getTime()), tempData.getTemp())));
+                        Platform.runLater(() -> tempGraf1.getData().add(new XYChart.Data(convertToStringHistoric(tempData.getTime()), tempData.getTemp())));
                 }
         }
 }
