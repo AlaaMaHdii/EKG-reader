@@ -20,7 +20,7 @@
       <Line endX="-99.99996948242188" endY="242.79998779296875" layoutX="579.0" layoutY="266.0" startX="-99.99996948242188" startY="-82.00001525878906" />
       <Label layoutX="188.0" layoutY="225.0" text="Sunhedsprofessoinel login" />
       <TextField id="cprField" fx:id="cprPatientFieldLogIn" layoutX="615.0" layoutY="286.0" />
-      <Button id="loginButton" fx:id="loginAsPatientButton" layoutX="591.0" layoutY="386.0" mnemonicParsing="false" onAction="#onLoginPatientButtonClick" prefHeight="46.0" prefWidth="198.0" text="Login som patient" />
+      <Button id="loginButton" fx:id="loginAsPatientButton" layoutX="591.0" layoutY="386.0" mnemonicParsing="false" onAction="#onLoginButtonClick" prefHeight="46.0" prefWidth="198.0" text="Login som patient" />
       <Label layoutX="535.0" layoutY="290.0" text="CPR-nummer" />
       <Label id="errorLabel" fx:id="errorLabelPatient" layoutX="590.0" layoutY="351.0" opacity="0.0" text="CPR-nummeret findes ikke i systemet" textAlignment="CENTER" textFill="RED" />
       <Label layoutX="656.0" layoutY="234.0" text="Patient login" />

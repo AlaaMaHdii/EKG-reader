@@ -1,12 +1,5 @@
 package com.hmaar.sundhed.model;
 
-import com.hmaar.sundhed.controller.DataController;
-import com.hmaar.sundhed.model.implementation.EKG;
-import com.hmaar.sundhed.model.implementation.Puls;
-import com.hmaar.sundhed.model.implementation.SpO2;
-import com.hmaar.sundhed.model.implementation.Temp;
-
-import java.util.Date;
 import java.util.Objects;
 
 public class AuthenticatedUser {
@@ -42,50 +35,6 @@ public class AuthenticatedUser {
     public String role;
 
     public boolean isStaff;
-    public String lastWarning = "";
-    public Long lastWarningPulsDate;
-    public Long lastWarningTempDate;
-    public Long lastWarningSpO2Date;
-
-    public boolean uploadWarning(int patientId, String warning, String comment, double value, DataController dataController){
-        if(lastWarningPulsDate == null || warning.contains("Puls") && System.currentTimeMillis()  >= ( lastWarningPulsDate + (30*1000))){
-            lastWarningPulsDate = System.currentTimeMillis();
-            boolean result =  this.db.uploadWarning(patientId, this, warning, comment, value);
-            dataController.loadDataToTable();
-            return result;
-        } else if(lastWarningTempDate == null || warning.contains("Temp") && System.currentTimeMillis()  >= ( lastWarningTempDate + (30*1000))){
-            lastWarningTempDate = System.currentTimeMillis();
-            boolean result =  this.db.uploadWarning(patientId, this, warning, comment, value);
-            dataController.loadDataToTable();
-            return result;
-        }else if(lastWarningSpO2Date == null || warning.contains("SpO2") && System.currentTimeMillis()  >= ( lastWarningSpO2Date + (30*1000))){
-            lastWarningSpO2Date = System.currentTimeMillis();
-            boolean result =  this.db.uploadWarning(patientId, this, warning, comment, value);
-            dataController.loadDataToTable();
-            return result;
-        }
-
-        return false;
-    }
-
-    public boolean uploadLog(int patientId, Object log){
-        String type = null;
-        double value = 0;
-        if(log.getClass() == Puls.class){
-            type = "Puls";
-            value = ((Puls) log).getPuls();
-        }else if(log.getClass() == EKG.class){
-            type = "EKG";
-            value = ((EKG) log).getVoltage();
-        }else if(log.getClass() == Temp.class){
-            type = "Temp";
-            value = ((Temp) log).getTemp();
-        }else if(log.getClass() == SpO2.class){
-            type = "SpO2";
-            value = ((SpO2) log).getSpO2();
-        }
-        return this.db.uploadLog(patientId, this, type, value);
-    }
 
     public AuthenticatedUser(int id, String cpr, String fullName, String role, Database db){
         this.id = id;

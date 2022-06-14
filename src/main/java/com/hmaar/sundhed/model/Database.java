@@ -41,20 +41,6 @@ public class Database {
         return null;
     }
 
-    public AuthenticatedUser loginAsPatient(String cpr) throws SQLException {
-        PreparedStatement pstmt = this.conn.prepareStatement("SELECT * FROM patients WHERE cpr = ? LIMIT 1");
-        pstmt.setString(1, cpr);
-        ResultSet result = pstmt.executeQuery();
-        while(result.next()) {   // Move the cursor to the next row
-            int id = result.getInt(1);
-            //int cpr = result.getInt(2); Bruges ikke da vi allerede har CPR i parameter.
-            String fullName = result.getString(3);
-            return new AuthenticatedUser(id, cpr, fullName, "Patient", this);
-        }
-
-        return null;
-    }
-
 
     public Patient retreivePatient(String cpr) throws SQLException {
         PreparedStatement pstmt = this.conn.prepareStatement("SELECT * FROM patients WHERE cpr = ? LIMIT 1");
@@ -89,7 +75,7 @@ public class Database {
             int staffWhoLogged  = result.getInt(3);
             String warning = result.getString(4);
             String comment = result.getString(5);
-            Timestamp timestamp = result.getTimestamp(6);
+            Date timestamp = result.getDate(6);
             double value = result.getDouble(7);
 
             warnings.add(new Comments(id, patientId, staffWhoLogged, comment, warning, value, timestamp, this));
@@ -114,44 +100,12 @@ public class Database {
             int staffWhoLogged  = result.getInt(3);
             String type = result.getString(4);
             double value = result.getDouble(5);
-            Timestamp timestamp = result.getTimestamp(6);
+            Date timestamp = result.getDate(6);
 
             logs.add(new Log(id, patientId, staffWhoLogged, type, value, timestamp));
         }
 
         return logs;
-    }
-
-
-    public boolean uploadWarning(int patientId, AuthenticatedUser user, String warning, String comment, double value){
-        PreparedStatement pstmt = null;
-        try {
-            pstmt = this.conn.prepareStatement("INSERT INTO warnings (patientId, staffWhoLogged, warning, comment, timestamp, value) VALUES (?, ?, ?, ?, ?, ?);");
-            pstmt.setInt(1, patientId);
-            pstmt.setInt(2, user.id);
-            pstmt.setString(3, warning);
-            pstmt.setString(4, comment);
-            pstmt.setTimestamp(5, new Timestamp(System.currentTimeMillis()));
-            pstmt.setDouble(6, value);
-            return pstmt.execute();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public boolean uploadLog(int patientId, AuthenticatedUser user, String type, double value){
-        PreparedStatement pstmt = null;
-        try {
-            pstmt = this.conn.prepareStatement("INSERT INTO logging (patientId, staffWhoLogged, type, value, timestamp) VALUES (?, ?, ?, ?, ?);");
-            pstmt.setInt(1, patientId);
-            pstmt.setInt(2, user.id);
-            pstmt.setString(3, type);
-            pstmt.setDouble(4, value);
-            pstmt.setTimestamp(5, new Timestamp(System.currentTimeMillis()));
-            return pstmt.execute();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
     }
 
 }

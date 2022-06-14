@@ -3,7 +3,6 @@ package com.hmaar.sundhed.model;
 
 import java.sql.Date;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 
 public class Comments {
     int id;
@@ -13,7 +12,7 @@ public class Comments {
     String warning;
 
     double value;
-    Timestamp timestamp;
+    Date timestamp;
     Database db;
 
 
@@ -30,7 +29,7 @@ public class Comments {
         this.comment = comment;
     }
 
-    public Comments(int id, int patientId, int staffWhoLogged, String comment, String warning, double value, Timestamp timestamp, Database db) {
+    public Comments(int id, int patientId, int staffWhoLogged, String comment, String warning, double value, Date timestamp, Database db) {
         this.id = id;
         this.patientId = patientId;
         this.staffWhoLogged = staffWhoLogged;
@@ -81,11 +80,11 @@ public class Comments {
         this.value = value;
     }
 
-    public Timestamp getTimestamp() {
+    public Date getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(Timestamp timestamp) {
+    public void setTimestamp(Date timestamp) {
         this.timestamp = timestamp;
     }
 }
