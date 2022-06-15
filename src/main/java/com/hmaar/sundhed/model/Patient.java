@@ -13,6 +13,15 @@ import java.util.Date;
 
 public class Patient {
     public String cpr;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public int id;
     public String fullName;
 

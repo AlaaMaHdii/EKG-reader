@@ -10,6 +10,7 @@ import com.hmaar.sundhed.model.interfaces.SpO2Data;
 import com.hmaar.sundhed.model.interfaces.TempData;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 
 public class Log {
     public int id;
@@ -17,10 +18,10 @@ public class Log {
     public int staffWhoLogged;
     public String type;
     public double value;
-    public Date timestamp;
+    public Timestamp timestamp;
 
 
-    public Log(int id, int patientId, int staffWhoLogged, String type, double value, Date timestamp) {
+    public Log(int id, int patientId, int staffWhoLogged, String type, double value, Timestamp timestamp) {
         this.id = id;
         this.patientId = patientId;
         this.staffWhoLogged = staffWhoLogged;
@@ -69,11 +70,11 @@ public class Log {
         this.value = value;
     }
 
-    public Date getTimestamp() {
+    public Timestamp getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(Date timestamp) {
+    public void setTimestamp(Timestamp timestamp) {
         this.timestamp = timestamp;
     }
 

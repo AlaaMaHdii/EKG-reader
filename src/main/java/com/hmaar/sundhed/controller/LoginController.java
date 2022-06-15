@@ -33,7 +33,7 @@ public class LoginController implements Initializable {
     @FXML
     private TextField cprField;
     @FXML
-    private TextField cprPatientField;
+    private TextField cprPatientFieldLogIn;
 
     // Patient fields
     @FXML
@@ -54,7 +54,7 @@ public class LoginController implements Initializable {
     @FXML
     private void onLoginButtonClick(javafx.event.ActionEvent event) throws IOException, SQLException {
         String cprNummerParsed = cprField.getText().replace("-","");
-        String cprNummerPatientParsed = cprPatientField.getText().replace("-","");
+        String cprNummerPatientParsed = cprPatientFieldLogIn.getText().replace("-","");
         System.out.println("CPR-nummer: " + cprNummerParsed);
         AuthenticatedUser user = db.loginAsStaff(cprNummerParsed);
         Patient patient = db.retreivePatient(cprNummerPatientParsed);
@@ -64,6 +64,20 @@ public class LoginController implements Initializable {
             // login er valid
             System.out.println(user.fullName);
             changeSceneStaff(event, user, patient);
+        }
+    }
+
+    @FXML
+    private void onLoginPatientButtonClick(javafx.event.ActionEvent event) throws IOException, SQLException {
+        String cprNummerParsed = cprPatientFieldLogIn.getText().replace("-","");
+        System.out.println("CPR-nummer: " + cprNummerParsed);
+        AuthenticatedUser user = db.loginAsPatient(cprNummerParsed);
+        Patient patient = db.retreivePatient(cprNummerParsed);
+        if(user == null || patient == null){
+            errorLabelPatient.setOpacity(1);
+        }else{
+            // login er valid
+            changeScenePatient(event, user, patient);
         }
     }
 
@@ -80,6 +94,27 @@ public class LoginController implements Initializable {
         controller.user = user;
         controller.patient = patient;
         controller.db = db;
+
+        // opstil view
+        loader.setController(controller);
+        Parent root = loader.load();
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    @FXML
+    private void changeScenePatient(javafx.event.ActionEvent event, AuthenticatedUser user, Patient patient) throws IOException {
+
+        // load fxml
+        FXMLLoader loader = new FXMLLoader(HealthApplicationMain.class.getResource("patient-view.fxml"));
+        Node node = (Node) event.getSource();
+        Stage stage = (Stage) node.getScene().getWindow();
+
+        // opstil controlleren
+        PatientViewController controller = new PatientViewController();
+        controller.user = user;
+        controller.patient = patient;
 
         // opstil view
         loader.setController(controller);
