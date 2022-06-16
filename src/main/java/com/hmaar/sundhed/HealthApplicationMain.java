@@ -19,7 +19,6 @@ public class HealthApplicationMain extends Application {
         stage.setTitle("Vital");
         stage.setScene(scene);
         stage.show();
-
     }
 
     @Override

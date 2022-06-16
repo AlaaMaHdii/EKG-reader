@@ -6,6 +6,7 @@ import com.hmaar.sundhed.model.implementation.Puls;
 import com.hmaar.sundhed.model.implementation.SpO2;
 import com.hmaar.sundhed.model.implementation.Temp;
 
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.Objects;
 
@@ -47,7 +48,7 @@ public class AuthenticatedUser {
     public Long lastWarningTempDate;
     public Long lastWarningSpO2Date;
 
-    public boolean uploadWarning(int patientId, String warning, String comment, double value, DataController dataController){
+    public boolean uploadWarning(int patientId, String warning, String comment, double value, DataController dataController) {
         if(lastWarningPulsDate == null || warning.contains("Puls") && System.currentTimeMillis()  >= ( lastWarningPulsDate + (30*1000))){
             lastWarningPulsDate = System.currentTimeMillis();
             boolean result =  this.db.uploadWarning(patientId, this, warning, comment, value);
@@ -84,7 +85,11 @@ public class AuthenticatedUser {
             type = "SpO2";
             value = ((SpO2) log).getSpO2();
         }
-        return this.db.uploadLog(patientId, this, type, value);
+        try {
+            return this.db.uploadLog(patientId, this, type, value);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public AuthenticatedUser(int id, String cpr, String fullName, String role, Database db){

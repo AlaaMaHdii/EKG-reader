@@ -16,6 +16,7 @@ import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.paint.Color;
 
 import java.net.URL;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.ZoneId;
@@ -288,7 +289,7 @@ public class DataController implements Initializable, Observer {
                         //graph1.setAnimated(true);
                 });
         }
-        public void checkForAnomalies(){
+        public void checkForAnomalies() {
 
                 if(pulsData != null && pulsLabel != null) {
                         if (pulsData.getPuls() < 50 || pulsData.getPuls() > 130) {

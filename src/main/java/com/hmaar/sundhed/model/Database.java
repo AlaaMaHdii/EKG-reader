@@ -4,15 +4,31 @@ import java.sql.*;
 import java.util.ArrayList;
 
 public class Database {
-    Connection conn;
+    public Connection conn;
 
-    public void connectToDb(){
-        try{
-            conn = DriverManager.getConnection(
-                    "jdbc:mysql://mysql-db.caprover.diplomportal.dk:3306/s190434","s190434","YvpU8sXPtIeRg7HwZR1Gr");
-        }catch(SQLException e){
-            System.out.println(e);
+    public String schema = "s190434"; // Database navn
+
+    public String getSchema() throws SQLException {
+        if(!conn.isClosed()){
+            return conn.getSchema();
+        }else{
+            return schema;
         }
+    }
+
+    public void setSchema(String schema) throws SQLException {
+        if(!conn.isClosed()){
+            closeConnection();
+            this.schema = schema;
+            connectToDb();
+        }else{
+            this.schema = schema;
+        }
+    }
+
+    public void connectToDb() throws SQLException {
+            conn = DriverManager.getConnection(
+                    "jdbc:mysql://mysql-db.caprover.diplomportal.dk:3306/" + schema,"s190434","YvpU8sXPtIeRg7HwZR1Gr");
     }
 
     public void closeConnection(){
@@ -139,19 +155,16 @@ public class Database {
         }
     }
 
-    public boolean uploadLog(int patientId, AuthenticatedUser user, String type, double value){
+    public boolean uploadLog(int patientId, AuthenticatedUser user, String type, double value) throws SQLException {
         PreparedStatement pstmt = null;
-        try {
-            pstmt = this.conn.prepareStatement("INSERT INTO logging (patientId, staffWhoLogged, type, value, timestamp) VALUES (?, ?, ?, ?, ?);");
-            pstmt.setInt(1, patientId);
-            pstmt.setInt(2, user.id);
-            pstmt.setString(3, type);
-            pstmt.setDouble(4, value);
-            pstmt.setTimestamp(5, new Timestamp(System.currentTimeMillis()));
-            return pstmt.execute();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        pstmt = this.conn.prepareStatement("INSERT INTO logging (patientId, staffWhoLogged, type, value, timestamp) VALUES (?, ?, ?, ?, ?);");
+        pstmt.setInt(1, patientId);
+        pstmt.setInt(2, user.id);
+        pstmt.setString(3, type);
+        pstmt.setDouble(4, value);
+        pstmt.setTimestamp(5, new Timestamp(System.currentTimeMillis()));
+        return pstmt.execute();
+
     }
 
 }

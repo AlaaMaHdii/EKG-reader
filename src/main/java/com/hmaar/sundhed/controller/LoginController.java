@@ -18,7 +18,6 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
-import java.util.Objects;
 import java.util.ResourceBundle;
 
 import static java.lang.Integer.parseInt;
@@ -31,9 +30,9 @@ public class LoginController implements Initializable {
     @FXML
     private Button loginAsStaffButton;
     @FXML
-    private TextField cprField;
+    private TextField cprStaffField;
     @FXML
-    private TextField cprPatientFieldLogIn;
+    private TextField cprPatientField;
 
     // Patient fields
     @FXML
@@ -41,20 +40,24 @@ public class LoginController implements Initializable {
     @FXML
     private Button loginAsPatientButton;
     @FXML
-    private TextField cprFieldPatientLogin;
+    private TextField cprTextFieldPatientLogin;
 
 
     private Database db = new Database();
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        db.connectToDb();
+        try {
+            db.connectToDb();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @FXML
     private void onLoginButtonClick(javafx.event.ActionEvent event) throws IOException, SQLException {
-        String cprNummerParsed = cprField.getText().replace("-","");
-        String cprNummerPatientParsed = cprPatientFieldLogIn.getText().replace("-","");
+        String cprNummerParsed = cprStaffField.getText().replace("-","");
+        String cprNummerPatientParsed = cprPatientField.getText().replace("-","");
         System.out.println("CPR-nummer: " + cprNummerParsed);
         AuthenticatedUser user = db.loginAsStaff(cprNummerParsed);
         Patient patient = db.retreivePatient(cprNummerPatientParsed);
@@ -69,7 +72,7 @@ public class LoginController implements Initializable {
 
     @FXML
     private void onLoginPatientButtonClick(javafx.event.ActionEvent event) throws IOException, SQLException {
-        String cprNummerParsed = cprPatientFieldLogIn.getText().replace("-","");
+        String cprNummerParsed = cprPatientField.getText().replace("-","");
         System.out.println("CPR-nummer: " + cprNummerParsed);
         AuthenticatedUser user = db.loginAsPatient(cprNummerParsed);
         Patient patient = db.retreivePatient(cprNummerParsed);
