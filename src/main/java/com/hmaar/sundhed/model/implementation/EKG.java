@@ -29,16 +29,6 @@ public class EKG implements EKGData {
     }
 
     @Override
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    @Override
-    public int getId() {
-        return id;
-    }
-
-    @Override
     public void setTime(long time) {
         this.time = time;
     }

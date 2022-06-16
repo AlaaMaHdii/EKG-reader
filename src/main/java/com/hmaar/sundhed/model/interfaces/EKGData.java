@@ -5,6 +5,4 @@ public interface EKGData {
     double getVoltage();
     void setTime(long time);
     long getTime();
-    void setId(int id);
-    int getId();
 }

@@ -19,7 +19,11 @@ public class HealthApplicationMain extends Application {
     // Bruges ikke
     @Override
     public  void start(Stage stage) throws IOException {
-        launch();
+        FXMLLoader fxmlLoader = new FXMLLoader(HealthApplicationMain.class.getResource("login-view.fxml")); // skift til login-view senere hen
+        Scene scene = new Scene(fxmlLoader.load(), 900, 600);
+        stage.setTitle("Vital");
+        stage.setScene(scene);
+        stage.show();
     }
 
     @Override

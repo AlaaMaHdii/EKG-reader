@@ -8,18 +8,22 @@ public class Database {
 
     public String schema = "s190434"; // Database navn
 
-    public String getSchema() {
-        return schema;
+    public String getSchema() throws SQLException {
+        if(!conn.isClosed()){
+            return conn.getSchema();
+        }else{
+            return schema;
+        }
     }
-
     public void setSchema(String schema) throws SQLException {
         if(!conn.isClosed()){
             closeConnection();
             this.schema = schema;
             connectToDb();
+        }else{
+            this.schema = schema;
         }
     }
-
     public void connectToDb(){
         try{
             conn = DriverManager.getConnection(
