@@ -12,13 +12,14 @@ import java.io.IOException;
 public class HealthApplicationMain extends Application {
 
 
-@Override
-    public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(HealthApplicationMain.class.getResource("login-view.fxml")); // skift til login-view senere hen
-        Scene scene = new Scene(fxmlLoader.load(), 900, 600);
-        stage.setTitle("Vital");
-        stage.setScene(scene);
-        stage.show();
+    public static void run(){
+            launch();
+    }
+
+    // Bruges ikke
+    @Override
+    public  void start(Stage stage) throws IOException {
+        launch();
     }
 
     @Override
@@ -27,9 +28,6 @@ public class HealthApplicationMain extends Application {
         System.exit(0);
     }
 
-    public static void main(String[] args) {
-        launch();
-    }
 
 
 }

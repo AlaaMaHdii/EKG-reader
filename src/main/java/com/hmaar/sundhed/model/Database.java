@@ -8,12 +8,8 @@ public class Database {
 
     public String schema = "s190434"; // Database navn
 
-    public String getSchema() throws SQLException {
-        if(!conn.isClosed()){
-            return conn.getSchema();
-        }else{
-            return schema;
-        }
+    public String getSchema() {
+        return schema;
     }
 
     public void setSchema(String schema) throws SQLException {
@@ -21,14 +17,16 @@ public class Database {
             closeConnection();
             this.schema = schema;
             connectToDb();
-        }else{
-            this.schema = schema;
         }
     }
 
-    public void connectToDb() throws SQLException {
+    public void connectToDb(){
+        try{
             conn = DriverManager.getConnection(
                     "jdbc:mysql://mysql-db.caprover.diplomportal.dk:3306/" + schema,"s190434","YvpU8sXPtIeRg7HwZR1Gr");
+        }catch(SQLException e){
+            System.out.println(e);
+        }
     }
 
     public void closeConnection(){
@@ -155,16 +153,19 @@ public class Database {
         }
     }
 
-    public boolean uploadLog(int patientId, AuthenticatedUser user, String type, double value) throws SQLException {
+    public boolean uploadLog(int patientId, AuthenticatedUser user, String type, double value){
         PreparedStatement pstmt = null;
-        pstmt = this.conn.prepareStatement("INSERT INTO logging (patientId, staffWhoLogged, type, value, timestamp) VALUES (?, ?, ?, ?, ?);");
-        pstmt.setInt(1, patientId);
-        pstmt.setInt(2, user.id);
-        pstmt.setString(3, type);
-        pstmt.setDouble(4, value);
-        pstmt.setTimestamp(5, new Timestamp(System.currentTimeMillis()));
-        return pstmt.execute();
-
+        try {
+            pstmt = this.conn.prepareStatement("INSERT INTO logging (patientId, staffWhoLogged, type, value, timestamp) VALUES (?, ?, ?, ?, ?);");
+            pstmt.setInt(1, patientId);
+            pstmt.setInt(2, user.id);
+            pstmt.setString(3, type);
+            pstmt.setDouble(4, value);
+            pstmt.setTimestamp(5, new Timestamp(System.currentTimeMillis()));
+            return pstmt.execute();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }

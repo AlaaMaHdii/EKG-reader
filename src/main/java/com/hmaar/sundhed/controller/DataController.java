@@ -310,7 +310,7 @@ public class DataController implements Initializable, Observer {
                 if(tempData != null && tempLabel != null) {
                         if (tempData.getTemp() < 36 || tempData.getTemp() > 39) {
                                 // kritisk
-                                user.uploadWarning(patient.getId(), "Temperatur er kritisk: " + (double) Math.round(tempData.getTemp() * 100) / 100 + "°C", "", tempData.getTemp(), this);
+                                user.uploadWarning(patient.getId(),"Temperatur er kritisk: " + (double) Math.round(tempData.getTemp() * 100) / 100 + "°C", "", tempData.getTemp(), this);
                                 tempLabel.setTextFill(red);
                         } else if (tempData.getTemp() == 36 || tempData.getTemp() == 39) {
                                 user.uploadWarning(patient.getId(), "Temperatur er unormal: " + (double) Math.round(tempData.getTemp() * 100) / 100 + "°C", "", tempData.getTemp(), this);

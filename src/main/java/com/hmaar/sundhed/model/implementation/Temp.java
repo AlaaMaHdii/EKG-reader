@@ -6,6 +6,8 @@ public class Temp implements TempData {
     private double temp;
     private long time;
 
+    private int id;
+
     public Temp(double temp, long time){
         this.temp = temp;
         this.time = time;
@@ -26,8 +28,10 @@ public class Temp implements TempData {
         return time;
     }
 
+
     @Override
     public void setTime(long time) {
         this.time = time;
     }
+
 }

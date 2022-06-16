@@ -5,6 +5,7 @@ import com.hmaar.sundhed.model.interfaces.SpO2Data;
 public class SpO2 implements SpO2Data {
     private double spO2;
     private long time;
+    private int id;
 
     public SpO2(double spO2, long time){
         this.spO2 = spO2;
@@ -30,4 +31,5 @@ public class SpO2 implements SpO2Data {
     public void setTime(long time) {
         this.time = time;
     }
+
 }

@@ -47,11 +47,7 @@ public class LoginController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        try {
-            db.connectToDb();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        db.connectToDb();
     }
 
     @FXML
