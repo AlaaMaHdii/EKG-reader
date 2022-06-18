@@ -53,6 +53,7 @@ public class DataPublisher implements Subject {
         ekgRecorder.setSubject(this);
         ekgRecorder.record();
 
+        /* Ikke med i semesterprojekt 2
 
         // puls
         pulsRecorder = new PulsRecorder();
@@ -68,6 +69,8 @@ public class DataPublisher implements Subject {
         spO2Recorder = new SpO2Recorder();
         spO2Recorder.setSubject(this);
         spO2Recorder.record();
+
+         */
     }
 
 

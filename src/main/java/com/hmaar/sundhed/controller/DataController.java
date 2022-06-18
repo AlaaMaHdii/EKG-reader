@@ -1,11 +1,11 @@
 package com.hmaar.sundhed.controller;
 import com.hmaar.sundhed.model.*;
+import com.hmaar.sundhed.model.implementation.EKG;
 import com.hmaar.sundhed.model.interfaces.EKGData;
 import com.hmaar.sundhed.model.interfaces.PulsData;
 import com.hmaar.sundhed.model.interfaces.SpO2Data;
 import com.hmaar.sundhed.model.interfaces.TempData;
 import javafx.application.Platform;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -16,7 +16,6 @@ import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.paint.Color;
 
 import java.net.URL;
-import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.ZoneId;
@@ -37,11 +36,11 @@ public class DataController implements Initializable, Observer {
 
         // Historisk data
         @FXML
-        private LineChart<CategoryAxis, Number> graph1;
-        private XYChart.Series<CategoryAxis, Number> pulsGraf1;
-        private XYChart.Series<CategoryAxis, Number> spO2Graf1;
-        private XYChart.Series<CategoryAxis, Number> tempGraf1;
-        private XYChart.Series<CategoryAxis, Number> ekgGraf1;
+        private LineChart<CategoryAxis, Number> graphHistoric;
+        private XYChart.Series<CategoryAxis, Number> pulsGrafHistoric;
+        private XYChart.Series<CategoryAxis, Number> spO2GrafHistoric;
+        private XYChart.Series<CategoryAxis, Number> tempGrafHistoric;
+        private XYChart.Series<CategoryAxis, Number> ekgGrafHistoric;
         private DataPublisher subject1;
         @FXML
         private Label loggedInLabel;
@@ -111,7 +110,7 @@ public class DataController implements Initializable, Observer {
         public Patient patient;
 
         public Database db;
-
+        private DataConsumer consumer;
 
 
         @Override
@@ -120,7 +119,7 @@ public class DataController implements Initializable, Observer {
                 //-154.0, -11.0, -116.0, -11.0, -107.0, -24.0, -90.0, -10.0, -75.0, -108.0, -75.0, 51.0, -62.0, -24.0, 5.0, -45.0, 76.0, -10.0
                 //graph = new LineChart<>(new NumberAxis(), new NumberAxis());
 
-                // Historic
+                // Realtime
                 subject = new DataPublisher();
                 subject.registerObserver(this);
                 subject.record();
@@ -145,32 +144,52 @@ public class DataController implements Initializable, Observer {
                 graph.getData().add(ekgGraf);
 
                 // Historic
-                graph1.setTitle("Historisk Data");
-                pulsGraf1 = new XYChart.Series<>();
-                pulsGraf1.setName("Puls");
+                graphHistoric.setTitle("Historisk Data");
+                pulsGrafHistoric = new XYChart.Series<>();
+                pulsGrafHistoric.setName("Puls");
 
-                spO2Graf1 = new XYChart.Series<>();
-                spO2Graf1.setName("SpO2");
+                spO2GrafHistoric = new XYChart.Series<>();
+                spO2GrafHistoric.setName("SpO2");
 
-                tempGraf1 = new XYChart.Series<>();
-                tempGraf1.setName("Temperatur");
+                tempGrafHistoric = new XYChart.Series<>();
+                tempGrafHistoric.setName("Temperatur");
 
-                ekgGraf1 = new XYChart.Series<>();
-                ekgGraf1.setName("EKG");
+                ekgGrafHistoric = new XYChart.Series<>();
+                ekgGrafHistoric.setName("EKG");
                 //NumberAxis xAxis = (NumberAxis) graph.getXAxis();
 
-                graph1.getData().add(pulsGraf1);
-                graph1.getData().add(spO2Graf1);
-                graph1.getData().add(tempGraf1);
-                graph1.getData().add(ekgGraf1);
-                graph.setAnimated(false);
-                graph1.setAnimated(false);
+                graphHistoric.getData().add(pulsGrafHistoric);
+                graphHistoric.getData().add(spO2GrafHistoric);
+                graphHistoric.getData().add(tempGrafHistoric);
+                graphHistoric.getData().add(ekgGrafHistoric);
 
+                graph.setAnimated(false);
+                graphHistoric.setAnimated(false);
+
+
+                // Setup GUI
                 updateStaffGui();
                 updatePatientLabels();
                 initCol();
                 loadDataToTable();
                 enableEditOnTable();
+        }
+
+        /*
+        private void run() {
+                dataGen = new DataGenerator(1500);
+                new Thread(dataGen).start();
+
+                dataGen.registerObserver(this);
+                consumer = new DataConsumer();
+                new Thread(consumer).start();
+        }
+        */
+
+        public void handle(EKG data) {
+                consumer.enqueue(data);
+                //This wakes up the consumer to save data
+                consumer.notifyOnEmpty();
         }
 
         public void dateChanged(){
@@ -267,24 +286,24 @@ public class DataController implements Initializable, Observer {
 
 
                         // Lang historie kort, der sker en race condition, da animation foregår asynkront https://bugs.openjdk.java.net/browse/JDK-8125967
-                        graph1.setAnimated(false);
-                        graph1.getData().clear();
-                        ;
+                        graphHistoric.setAnimated(false);
+                        graphHistoric.getData().clear();
+
 
                         if (showSpO2) {
-                                graph1.getData().add(spO2Graf1);
+                                graphHistoric.getData().add(spO2GrafHistoric);
                         }
 
                         if (showTemp) {
-                                graph1.getData().add(tempGraf1);
+                                graphHistoric.getData().add(tempGrafHistoric);
                         }
 
                         if (showEkg) {
-                                graph1.getData().add(ekgGraf1);
+                                graphHistoric.getData().add(ekgGrafHistoric);
                         }
 
                         if (showPuls) {
-                                graph1.getData().add(pulsGraf1);
+                                graphHistoric.getData().add(pulsGrafHistoric);
                         }
                         //graph1.setAnimated(true);
                 });
@@ -416,26 +435,26 @@ public class DataController implements Initializable, Observer {
         // Historic graph
         public void setEkgDataHistoric(EKGData ekgData) {
                 // Tjek om der har været en opdatering i ekgDataet
-                if( tempGraf1 != null && ekgData != null){
-                        Platform.runLater(() -> ekgGraf1.getData().add(new XYChart.Data(convertToStringHistoric(ekgData.getTime()), ekgData.getVoltage())));
+                if( tempGrafHistoric != null && ekgData != null){
+                        Platform.runLater(() -> ekgGrafHistoric.getData().add(new XYChart.Data(convertToStringHistoric(ekgData.getTime()), ekgData.getVoltage())));
                 }
         }
 
         public void setPulsDataHistoric(PulsData pulsData) {
-                if(pulsGraf1 != null && pulsData != null){
-                        Platform.runLater(() -> pulsGraf1.getData().add(new XYChart.Data(convertToStringHistoric(pulsData.getTime()), pulsData.getPuls())));
+                if(pulsGrafHistoric != null && pulsData != null){
+                        Platform.runLater(() -> pulsGrafHistoric.getData().add(new XYChart.Data(convertToStringHistoric(pulsData.getTime()), pulsData.getPuls())));
                 }
         }
 
         public void setSpO2DataHistoric(SpO2Data spO2Data) {
-                if(spO2Graf1 != null && spO2Data != null){
-                        Platform.runLater(() -> spO2Graf1.getData().add(new XYChart.Data(convertToStringHistoric(spO2Data.getTime()),spO2Data.getSpO2())));
+                if(spO2GrafHistoric != null && spO2Data != null){
+                        Platform.runLater(() -> spO2GrafHistoric.getData().add(new XYChart.Data(convertToStringHistoric(spO2Data.getTime()),spO2Data.getSpO2())));
                 }
         }
 
         public void setTempDataHistoric(TempData tempData) {
-                if(tempGraf1 != null && tempData != null){
-                        Platform.runLater(() -> tempGraf1.getData().add(new XYChart.Data(convertToStringHistoric(tempData.getTime()), tempData.getTemp())));
+                if(tempGrafHistoric != null && tempData != null){
+                        Platform.runLater(() -> tempGrafHistoric.getData().add(new XYChart.Data(convertToStringHistoric(tempData.getTime()), tempData.getTemp())));
                 }
         }
 }
