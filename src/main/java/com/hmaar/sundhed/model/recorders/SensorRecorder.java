@@ -98,6 +98,8 @@ public class SensorRecorder implements Runnable {
                 serialPort.openPort();
                 serialPort.setComPortParameters(115200, 8, 1, 0);
                 serialPort.setFlowControl(SerialPort.FLOW_CONTROL_DISABLED);
+                serialPort.setComPortTimeouts(SerialPort.TIMEOUT_READ_BLOCKING, 100,100);
+                serialPort.setDTR();
             }catch (SerialPortInvalidPortException ex){
                 //Sensor must have disconnected in the meantime
                 resetSerialConnection();
