@@ -1,7 +1,10 @@
 package com.hmaar.sundhed.model;
 
+import com.hmaar.sundhed.model.interfaces.SQLData;
+
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Database {
     public Connection conn;
@@ -141,7 +144,7 @@ public class Database {
     }
 
 
-    public boolean uploadWarning(int patientId, AuthenticatedUser user, String warning, String comment, double value){
+    public boolean uploadWarning(int patientId, AuthenticatedUser user, String warning, String comment, double value, long timestamp){
         PreparedStatement pstmt = null;
         try {
             pstmt = this.conn.prepareStatement("INSERT INTO warnings (patientId, staffWhoLogged, warning, comment, timestamp, value) VALUES (?, ?, ?, ?, ?, ?);");
@@ -157,18 +160,37 @@ public class Database {
         }
     }
 
-    public boolean uploadLog(int patientId, AuthenticatedUser user, String type, double value){
+    public boolean uploadLog(int patientId, AuthenticatedUser user, SQLData log){
         PreparedStatement pstmt = null;
         try {
             pstmt = this.conn.prepareStatement("INSERT INTO logging (patientId, staffWhoLogged, type, value, timestamp) VALUES (?, ?, ?, ?, ?);");
             pstmt.setInt(1, patientId);
             pstmt.setInt(2, user.id);
-            pstmt.setString(3, type);
-            pstmt.setDouble(4, value);
-            pstmt.setTimestamp(5, new Timestamp(System.currentTimeMillis()));
+            pstmt.setString(3, log.getType());
+            pstmt.setDouble(4, log.getSensorValue());
+            pstmt.setTimestamp(5, new Timestamp(log.getTime()));
             return pstmt.execute();
         } catch (SQLException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    public boolean uploadLog(int patientId, AuthenticatedUser user, List<SQLData> logs){
+        PreparedStatement pstmt = null;
+        try {
+            pstmt = this.conn.prepareStatement("INSERT INTO logging (patientId, staffWhoLogged, type, value, timestamp) VALUES (?, ?, ?, ?, ?);");
+            for (SQLData log: logs) {
+                pstmt.setInt(1, patientId);
+                pstmt.setInt(2, user.id);
+                pstmt.setString(3, log.getType());
+                pstmt.setDouble(4, log.getSensorValue());
+                pstmt.setTimestamp(5, new Timestamp(log.getTime()));
+                pstmt.addBatch();
+            }
+            pstmt.executeBatch();
+            return true; //  boolean er om sql kom igennem eller om der skete en fejl
+        } catch (SQLException e) {
+            return false;
         }
     }
 

@@ -83,7 +83,7 @@ public class Log {
     }
 
     public EKG generateEkg(){
-        return new EKG(value, timestamp.getTime());
+        return new EKG(value, timestamp.getTime(), true);
     }
 
     public Temp generateTemp(){

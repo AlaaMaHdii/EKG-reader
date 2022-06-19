@@ -1,20 +1,20 @@
 package com.hmaar.sundhed.model;
 
+import com.hmaar.sundhed.controller.DataController;
 import com.hmaar.sundhed.controller.Observer;
 import com.hmaar.sundhed.model.interfaces.EKGData;
 import com.hmaar.sundhed.model.interfaces.PulsData;
 import com.hmaar.sundhed.model.interfaces.SpO2Data;
 import com.hmaar.sundhed.model.interfaces.TempData;
-import com.hmaar.sundhed.model.recorders.EKGRecorder;
-import com.hmaar.sundhed.model.recorders.PulsRecorder;
-import com.hmaar.sundhed.model.recorders.SpO2Recorder;
-import com.hmaar.sundhed.model.recorders.TempRecorder;
+import com.hmaar.sundhed.model.recorders.*;
 
+import javax.xml.crypto.Data;
 import java.util.ArrayList;
 
 public class DataPublisher implements Subject {
 
     private final ArrayList<Observer> observers = new ArrayList<>(); // kommer dog kun til at indeholde en observer...
+    public DataController dc;
 
     // Data
     private EKGData ekgData;
@@ -28,6 +28,12 @@ public class DataPublisher implements Subject {
     private PulsRecorder pulsRecorder;
     private SpO2Recorder spO2Recorder;
     private TempRecorder tempRecorder;
+    private SensorRecorder sensorRecorder;
+    private Thread sensorThread;
+
+    public DataPublisher(DataController dc) {
+        this.dc = dc;
+    }
 
     @Override
     public void registerObserver(Observer o) {
@@ -47,13 +53,18 @@ public class DataPublisher implements Subject {
     }
 
     public void record(){
+        sensorRecorder = new SensorRecorder();
+        sensorRecorder.setSubject(this);
+        sensorRecorder.setDataController(dc);
+        sensorThread = new Thread(sensorRecorder);
+        sensorThread.start();
+
+        /* Ikke med i semesterprojekt 2
 
         //ekg
         ekgRecorder = new EKGRecorder();
         ekgRecorder.setSubject(this);
         ekgRecorder.record();
-
-        /* Ikke med i semesterprojekt 2
 
         // puls
         pulsRecorder = new PulsRecorder();

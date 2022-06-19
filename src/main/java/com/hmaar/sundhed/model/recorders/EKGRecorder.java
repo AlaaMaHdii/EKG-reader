@@ -15,7 +15,7 @@ public class EKGRecorder {
                 while(true) {
                     Thread.sleep(500);
                     if (subject != null) {
-                        subject.setEkgData(new EKG(Math.random(), System.currentTimeMillis()));
+                        subject.setEkgData(new EKG(Math.random(), System.currentTimeMillis(), true));
                     }
                 }
             } catch (InterruptedException e) {

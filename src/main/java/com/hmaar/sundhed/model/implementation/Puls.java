@@ -1,11 +1,12 @@
 package com.hmaar.sundhed.model.implementation;
 
 import com.hmaar.sundhed.model.interfaces.PulsData;
+import com.hmaar.sundhed.model.interfaces.SQLData;
 
-public class Puls implements PulsData {
+public class Puls implements PulsData, SQLData {
     private double puls;
     private long time;
-
+    public final String type = "Puls";
     public Puls(double puls, long time){
         this.puls = puls;
         this.time = time;
@@ -26,6 +27,20 @@ public class Puls implements PulsData {
         return time;
     }
 
+    @Override
+    public double getSensorValue() {
+        return getPuls();
+    }
+
+    @Override
+    public void setSensorValue(double sensorValue) {
+        setPuls(sensorValue);
+    }
+
+    @Override
+    public String getType() {
+        return type;
+    }
 
     @Override
     public void setTime(long time) {
