@@ -60,18 +60,19 @@ public class EkgConsumer implements Runnable{
                     break;
                 }
             }
-            List<EKG> listCopy;
-            synchronized (dataList){
-                //Take a copy of list and empty it;
-                listCopy = new LinkedList<>(dataList);
-                dataList.clear();
+            if(dataList.size() > 250) {
+                List<EKG> listCopy;
+                synchronized (dataList) {
+                    //Take a copy of list and empty it;
+                    listCopy = new LinkedList<>(dataList);
+                    dataList.clear();
+                }
+                // Process data
+                for (EKG ekg : listCopy) {
+                    dc.setEkgData(ekg);
+                }
+                dc.cleanUpGraphs();
             }
-
-            // Process data
-            for (EKG ekg: listCopy) {
-                dc.setEkgData(ekg);
-            }
-            dc.cleanUpGraphs();
         }
     }
 }
