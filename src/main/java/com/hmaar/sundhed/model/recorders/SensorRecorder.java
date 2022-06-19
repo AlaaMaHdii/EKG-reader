@@ -36,6 +36,7 @@ public class SensorRecorder implements Runnable {
     }
 
     public void resetSerialConnection(){
+        System.out.println("Resetting serial connection.");
         if(serialPort == null){
             return;
         }
@@ -70,7 +71,7 @@ public class SensorRecorder implements Runnable {
     }
 
     public void sendMessage(String msg){
-        if(serialPort != null & serialPort.isOpen()){
+        if(serialPort != null && serialPort.isOpen()){
             out.println(msg);
         }
     }
@@ -107,7 +108,7 @@ public class SensorRecorder implements Runnable {
 
             // Separate thread code
             int errors = 0; // increment each time we get an error, if this exceeds 3 times, we reset!
-            while (serialPort != null & serialPort.isOpen()) {
+            while (serialPort != null && serialPort.isOpen()) {
                     if(serialPort.bytesAvailable() > 0){ // skal være 1 i bytes
                         //int sample = fetchSample();
                         // data er klart
@@ -125,7 +126,7 @@ public class SensorRecorder implements Runnable {
                                 errors++;
                             }
                         }
-                        if (sampleString != null & sample != 0){
+                        if (sampleString != null && sample != 0){
                             // Notify consumers.
                             subject.setEkgData(new EKG(sample, System.currentTimeMillis(), false));
                             // Reset antal fejl.

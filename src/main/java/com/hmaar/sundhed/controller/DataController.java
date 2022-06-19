@@ -202,7 +202,7 @@ public class DataController implements Initializable, Observer {
 
 
         public void dateChanged(){
-                if(fraDate.getValue() != null & tilDate.getValue() != null){
+                if(fraDate.getValue() != null && tilDate.getValue() != null){
                         Date dateStart = Date.from(Instant.from(fraDate.getValue().atStartOfDay(ZoneId.systemDefault())));
                         Date dateEnd = Date.from(Instant.from(tilDate.getValue().atStartOfDay(ZoneId.systemDefault())));
                         ArrayList<Log> logs = patient.getLogs(dateStart, dateEnd);
@@ -426,7 +426,7 @@ public class DataController implements Initializable, Observer {
         }
         public void setEkgData(EKGData ekgData) {
                 // Tjek om der har været en opdatering i ekgDataet
-                if(ekgData != this.ekgData & ekgGraf != null && ekgData != null){
+                if(ekgData != this.ekgData && ekgGraf != null && ekgData != null){
                         // Ændre værdien
                         this.ekgData = ekgData;
                         // Placere det nye data i serien.
@@ -440,7 +440,7 @@ public class DataController implements Initializable, Observer {
         public void setEkgData(List<EKGData> ekgData) {
                 // Tjek om der har været en opdatering i ekgDataet
                 for (EKGData ekg: ekgData) {
-                        if(ekg != this.ekgData & ekgGraf != null && ekg != null){
+                        if(ekg != this.ekgData && ekgGraf != null && ekg != null){
                                 // Ændre værdien
                                 this.ekgData = ekg;
                                 // Placere det nye data i serien.
@@ -451,7 +451,7 @@ public class DataController implements Initializable, Observer {
         }
 
         public void setPulsData(PulsData pulsData) {
-                if(pulsData != this.pulsData & pulsGraf != null && pulsData != null){
+                if(pulsData != this.pulsData && pulsGraf != null && pulsData != null){
                         this.pulsData = pulsData;
                         Platform.runLater(() -> pulsGraf.getData().add(new XYChart.Data(convertToString(pulsData.getTime()), pulsData.getPuls())));
                         user.uploadLog(patient.getId(), (SQLData) pulsData);
@@ -459,7 +459,7 @@ public class DataController implements Initializable, Observer {
         }
 
         public void setSpO2Data(SpO2Data spO2Data) {
-                if(spO2Data != this.spO2Data & spO2Graf != null && spO2Data != null){
+                if(spO2Data != this.spO2Data && spO2Graf != null && spO2Data != null){
                         this.spO2Data = spO2Data;
                         Platform.runLater(() -> spO2Graf.getData().add(new XYChart.Data(convertToString(spO2Data.getTime()),spO2Data.getSpO2())));
                         user.uploadLog(patient.getId(), (SQLData) spO2Data);
@@ -467,7 +467,7 @@ public class DataController implements Initializable, Observer {
         }
 
         public void setTempData(TempData tempData) {
-                if(tempData != this.tempData & tempGraf != null && tempData != null){
+                if(tempData != this.tempData && tempGraf != null && tempData != null){
                         this.tempData = tempData;
                         Platform.runLater(() -> tempGraf.getData().add(new XYChart.Data(convertToString(tempData.getTime()), tempData.getTemp())));
                         user.uploadLog(patient.getId(), (SQLData) tempData);
