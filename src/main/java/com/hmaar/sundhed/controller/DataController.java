@@ -2,6 +2,7 @@ package com.hmaar.sundhed.controller;
 import com.fazecast.jSerialComm.SerialPort;
 import com.hmaar.sundhed.model.*;
 import com.hmaar.sundhed.model.interfaces.*;
+import com.hmaar.sundhed.model.recorders.SensorRecorder;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -123,6 +124,7 @@ public class DataController implements Initializable, Observer {
         public Database db;
         private EkgConsumer ekgConsumer;
         private Thread ekgConsumerThread;
+        public SensorRecorder sensorRecorder;
 
 
         @Override
@@ -497,5 +499,12 @@ public class DataController implements Initializable, Observer {
                 if(tempGrafHistoric != null && tempData != null){
                         Platform.runLater(() -> tempGrafHistoric.getData().add(new XYChart.Data(convertToStringHistoric(tempData.getTime()), tempData.getTemp())));
                 }
+        }
+
+        public void setSensorRecorder(SensorRecorder sensorRecorder){
+                this.sensorRecorder = sensorRecorder;
+        }
+        public SensorRecorder getSensorRecorder(){
+                return sensorRecorder;
         }
 }
