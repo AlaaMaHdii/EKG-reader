@@ -102,6 +102,8 @@ public class SensorRecorder implements Runnable {
                 serialPort.setDTR();
             }catch (SerialPortInvalidPortException ex){
                 //Sensor must have disconnected in the meantime
+                ex.printStackTrace();
+                System.out.println(ex);
                 resetSerialConnection();
             }
             // Setup in and out
