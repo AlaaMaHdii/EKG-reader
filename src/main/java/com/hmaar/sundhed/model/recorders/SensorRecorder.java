@@ -85,6 +85,7 @@ public class SensorRecorder implements Runnable {
         while (true) {
             // Setup code
             while (this.serialPort == null || subject == null ) {
+                dc.setupSensors();
                 Thread.onSpinWait();
                 // we are waiting for the user to choose an appropriate serialPort
             }

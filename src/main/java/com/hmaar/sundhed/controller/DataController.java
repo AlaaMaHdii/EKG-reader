@@ -1,13 +1,9 @@
 package com.hmaar.sundhed.controller;
 import com.fazecast.jSerialComm.SerialPort;
 import com.hmaar.sundhed.model.*;
-import com.hmaar.sundhed.model.implementation.EKG;
 import com.hmaar.sundhed.model.interfaces.*;
-import com.hmaar.sundhed.model.recorders.SensorRecorder;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.*;
@@ -263,7 +259,7 @@ public class DataController implements Initializable, Observer {
                 statusLabel.setText("Forbundet til Vital databasen. Sensor opsamler korrekt.");
         }
 
-        public void setupSensors(SensorRecorder sensorRecorder){
+        public void setupSensors(){
                 SerialPort SerialPorts[] = sensorRecorder.getSerialPorts();
                 for (SerialPort serialPort: SerialPorts) {
                         // for hver serialport fundet
