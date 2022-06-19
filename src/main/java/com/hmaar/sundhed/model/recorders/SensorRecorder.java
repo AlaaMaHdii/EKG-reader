@@ -4,6 +4,7 @@ import com.hmaar.sundhed.controller.DataController;
 import com.hmaar.sundhed.model.DataPublisher;
 import com.hmaar.sundhed.model.implementation.EKG;
 import com.fazecast.jSerialComm.*;
+import javafx.application.Platform;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -82,6 +83,7 @@ public class SensorRecorder implements Runnable {
     @Override
     public void run() {
         getDataController().setSensorRecorder(this);
+        Platform.runLater(() ->dc.setupSensors());
         // Main infinite loop
         while (true) {
             // Setup code
