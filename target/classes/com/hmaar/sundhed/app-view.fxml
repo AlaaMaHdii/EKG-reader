@@ -59,190 +59,190 @@
 <?import javafx.scene.text.Font?>
 
 <VBox maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
-  <children>
-    <MenuBar fx:id="menuBar" prefHeight="14.0" prefWidth="900.0" VBox.vgrow="NEVER">
-      <menus>
-        <Menu mnemonicParsing="false" text="Patient">
-          <items>
-            <MenuItem mnemonicParsing="false" text="Find patient" />
-                  <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem mnemonicParsing="false" text="Opret patient" />
-          </items>
-        </Menu>
-            <Menu fx:id="sensorMenu" mnemonicParsing="false" text="Sensor">
-               <items>
-                  <Menu fx:id="connectSubMenu" mnemonicParsing="false" text="Forbind" />
-                  <MenuItem fx:id="reloadMenuItem" mnemonicParsing="false" text="Genopfrisk" />
-                  <MenuItem fx:id="disconnectMenuItem" disable="true" mnemonicParsing="false" text="Afbryd forbindelse" />
-               </items>
-            </Menu>
-          <Menu mnemonicParsing="false" text="Hjælp">
-              <items>
-                  <MenuItem mnemonicParsing="false" text="Om Vital" />
-              </items>
-          </Menu>
-      </menus>
-    </MenuBar>
-    <SplitPane dividerPositions="0.742653606411398" focusTraversable="true" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
-      <items>
-            <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE">
-              <tabs>
-                <Tab text="Log">
-                  <content>
-                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                           <children>
-                              <Label alignment="CENTER" layoutX="24.0" layoutY="14.0" style="&#10;" text="Log" textAlignment="CENTER" wrapText="false">
-                                 <font>
-                                    <Font size="18.0" fx:id="x11" />
-                                 </font>
-                                 <textFill>
-                                    <Color red="0.624" green="0.624" blue="0.624" fx:id="x21" />
-                                 </textFill>
-                              </Label>
-                              <TableView fx:id="logTabel" layoutX="34.0" layoutY="86.0" prefHeight="401.0" prefWidth="594.0">
-                                <columns>
-                                  <TableColumn fx:id="colTime" prefWidth="124.00000381469727" text="Tidspunkt" />
-                                  <TableColumn fx:id="colType" minWidth="0.0" prefWidth="149.59986877441406" text="Hændelse" />
-                                  <TableColumn fx:id="colComment" minWidth="0.0" prefWidth="319.2000427246094" text="Kommentar" />
-                                </columns>
-                              </TableView>
-                              <Button layoutX="555.0" layoutY="53.0" mnemonicParsing="false" onAction="#loadDataToTable" text="Genindlæs" />
-                           </children>
-                        </AnchorPane>
-                  </content>
-                </Tab>
-                <Tab text="Målinger">
-                  <content>
-                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                           <children>
-                              <LineChart fx:id="graph" layoutX="31.0" layoutY="86.0" prefHeight="400.0" prefWidth="600.0">
-                                <xAxis>
-                                  <CategoryAxis side="BOTTOM" />
-                                </xAxis>
-                                <yAxis>
-                                  <NumberAxis side="LEFT" />
-                                </yAxis>
-                              </LineChart>
-                              <CheckBox fx:id="spO2Button" layoutX="207.0" layoutY="47.0" mnemonicParsing="false" onAction="#toggleSeriesRealTime" selected="true" text="SpO2" />
-                              <CheckBox fx:id="tempButton" layoutX="272.0" layoutY="47.0" mnemonicParsing="false" onAction="#toggleSeriesRealTime" selected="true" text="Temperatur" />
-                              <CheckBox fx:id="ekgButton" layoutX="368.0" layoutY="47.0" mnemonicParsing="false" onAction="#toggleSeriesRealTime" selected="true" text="EKG" />
-                              <Label alignment="CENTER" layoutX="24.0" layoutY="14.0" style="&#10;" text="Målinger" textAlignment="CENTER" wrapText="false">
-                                 <font>
-                                    <Font size="18.0" fx:id="x12" />
-                                 </font>
-                                 <textFill>
-                                    <Color red="0.624" green="0.624" blue="0.624" fx:id="x22" />
-                                 </textFill>
-                              </Label>
-                              <CheckBox fx:id="pulsButton" layoutX="424.0" layoutY="47.0" mnemonicParsing="false" onAction="#toggleSeriesRealTime" selected="true" text="Puls" />
-                           </children>
-                        </AnchorPane>
-                  </content>
-                </Tab>
-                  <Tab text="Historik">
-                     <content>
-                        <AnchorPane fx:id="" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                           <children>
-                              <LineChart fx:id="graphHistoric" layoutX="31.0" layoutY="86.0" prefHeight="400.0" prefWidth="600.0">
-                                 <xAxis>
-                                    <CategoryAxis side="BOTTOM" />
-                                 </xAxis>
-                                 <yAxis>
-                                    <NumberAxis side="LEFT" />
-                                 </yAxis>
-                              </LineChart>
-                              <CheckBox fx:id="spO2Button1" layoutX="207.0" layoutY="47.0" mnemonicParsing="false" onAction="#toggleSeriesHistoric" selected="true" text="SpO2" />
-                              <CheckBox fx:id="tempButton1" layoutX="272.0" layoutY="47.0" mnemonicParsing="false" onAction="#toggleSeriesHistoric" selected="true" text="Temperatur" />
-                              <CheckBox fx:id="ekgButton1" layoutX="368.0" layoutY="47.0" mnemonicParsing="false" onAction="#toggleSeriesHistoric" selected="true" text="EKG" />
-                              <Label alignment="CENTER" layoutX="24.0" layoutY="14.0" style="&#10;" text="Historisk data" textAlignment="CENTER" wrapText="false">
-                                 <font>
-                                    <Font size="18.0" fx:id="x121" />
-                                 </font>
-                                 <textFill>
-                                    <Color red="0.624" green="0.624" blue="0.624" fx:id="x221" />
-                                 </textFill>
-                              </Label>
-                              <CheckBox fx:id="pulsButton1" layoutX="424.0" layoutY="47.0" mnemonicParsing="false" onAction="#toggleSeriesHistoric" selected="true" text="Puls" />
-                              <DatePicker fx:id="fraDate" layoutX="184.0" layoutY="15.0" onAction="#dateChanged" promptText="Fra" />
-                              <DatePicker fx:id="tilDate" layoutX="405.0" layoutY="15.0" onAction="#dateChanged" promptText="Til" />
-                           </children>
-                        </AnchorPane>
-                     </content>
-                  </Tab>
-              </tabs>
-            </TabPane>
-        <AnchorPane prefHeight="551.0" prefWidth="202.0">
-          <children>
-            <Label alignment="CENTER" layoutX="14.0" layoutY="14.0" style="&#10;" text="Patient" textAlignment="CENTER" wrapText="false">
-                     <font>
-                <Font size="18.0" fx:id="x1" />
-                     </font>
-                     <textFill>
-                <Color red="0.624" green="0.624" blue="0.624" fx:id="x2" />
-                     </textFill></Label>
-                  <ImageView fitHeight="152.0" fitWidth="145.0" layoutX="42.0" layoutY="61.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@user.png" />
-                     </image>
-                  </ImageView>
-                  <Label layoutX="28.0" layoutY="236.0" text="Navn" />
-                  <Label fx:id="patientNavnLabel" layoutX="123.0" layoutY="236.0" text="Ingen" />
-                  <Label layoutX="28.0" layoutY="258.0" text="Alder" />
-                  <Label fx:id="patientAlderLabel" layoutX="123.0" layoutY="258.0" text="0 år" />
-                  <Label layoutX="14.0" layoutY="486.0" text="Puls">
-                     <font>
-                        <Font size="25.0" />
-                     </font>
-                  </Label>
-                  <Label fx:id="pulsLabel" layoutX="15.0" layoutY="522.0" text="?BPM" textFill="#ea0b0b">
-                     <font>
-                        <Font name="System Bold" size="12.0" />
-                     </font></Label>
-                  <Label layoutX="73.0" layoutY="486.0" text="SpO2">
-                     <font>
-                        <Font size="25.0" />
-                     </font>
-                  </Label>
-                  <Label fx:id="spO2Label" layoutX="95.0" layoutY="522.0" text="?%" textFill="RED">
-                     <font>
-                        <Font name="System Bold" size="12.0" />
-                     </font>
-                  </Label>
-                  <Label layoutX="151.0" layoutY="486.0" text="Temp">
-                     <font>
-                        <Font size="25.0" />
-                     </font>
-                  </Label>
-                  <Label fx:id="tempLabel" layoutX="170.0" layoutY="522.0" text="38°C" textFill="#1ab736">
-                     <font>
-                        <Font name="System Bold" size="12.0" />
-                     </font>
-                  </Label>
-                  <Label layoutX="28.0" layoutY="277.0" text="CPR" />
-                  <Label fx:id="patientCprLabel" layoutX="123.0" layoutY="277.0" text="000000-0000" />
-          </children>
-        </AnchorPane>
-      </items>
-         <opaqueInsets>
-            <Insets />
-         </opaqueInsets>
-    </SplitPane>
-    <HBox id="HBox" alignment="CENTER_LEFT" spacing="5.0" VBox.vgrow="NEVER">
-      <children>
-        <Label id="loggedInLabel" fx:id="loggedInLabel" maxHeight="1.7976931348623157E308" maxWidth="-1.0" text="Du er logget ind som John (Overlæge)" HBox.hgrow="ALWAYS">
-          <font>
-            <Font size="11.0" fx:id="x3" />
-          </font>
-          <textFill>
-            <Color red="0.625" green="0.625" blue="0.625" fx:id="x4" />
-          </textFill>
-        </Label>
-        <Pane prefHeight="-1.0" prefWidth="-1.0" HBox.hgrow="ALWAYS" />
-        <Label fx:id="statusLabel" font="$x3" maxWidth="-1.0" text="Forbundet til Vital databasen. Sensor er ikke forbundet." textFill="$x4" HBox.hgrow="NEVER" />
-      </children>
-      <padding>
-        <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
-      </padding>
-    </HBox>
-  </children>
+    <children>
+        <MenuBar fx:id="menuBar" prefHeight="14.0" prefWidth="900.0" VBox.vgrow="NEVER">
+            <menus>
+                <Menu mnemonicParsing="false" text="Patient">
+                    <items>
+                        <MenuItem mnemonicParsing="false" text="Find patient" />
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                        <MenuItem mnemonicParsing="false" text="Opret patient" />
+                    </items>
+                </Menu>
+                <Menu fx:id="sensorMenu" mnemonicParsing="false" text="Sensor">
+                    <items>
+                        <Menu fx:id="connectSubMenu" mnemonicParsing="false" text="Forbind" />
+                        <MenuItem fx:id="reloadMenuItem" mnemonicParsing="false" onAction="#setupSensors" text="Genopfrisk" />
+                        <MenuItem fx:id="disconnectMenuItem" disable="true" onAction="#disconnectFromSensor" mnemonicParsing="false" text="Afbryd forbindelse" />
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Hjælp">
+                    <items>
+                        <MenuItem mnemonicParsing="false" text="Om Vital" />
+                    </items>
+                </Menu>
+            </menus>
+        </MenuBar>
+        <SplitPane dividerPositions="0.742653606411398" focusTraversable="true" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
+            <items>
+                <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE">
+                    <tabs>
+                        <Tab text="Log">
+                            <content>
+                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                    <children>
+                                        <Label alignment="CENTER" layoutX="24.0" layoutY="14.0" style="&#10;" text="Log" textAlignment="CENTER" wrapText="false">
+                                            <font>
+                                                <Font size="18.0" fx:id="x11" />
+                                            </font>
+                                            <textFill>
+                                                <Color red="0.624" green="0.624" blue="0.624" fx:id="x21" />
+                                            </textFill>
+                                        </Label>
+                                        <TableView fx:id="logTabel" layoutX="34.0" layoutY="86.0" prefHeight="401.0" prefWidth="594.0">
+                                            <columns>
+                                                <TableColumn fx:id="colTime" prefWidth="124.00000381469727" text="Tidspunkt" />
+                                                <TableColumn fx:id="colType" minWidth="0.0" prefWidth="149.59986877441406" text="Hændelse" />
+                                                <TableColumn fx:id="colComment" minWidth="0.0" prefWidth="319.2000427246094" text="Kommentar" />
+                                            </columns>
+                                        </TableView>
+                                        <Button layoutX="555.0" layoutY="53.0" mnemonicParsing="false" onAction="#loadDataToTable" text="Genindlæs" />
+                                    </children>
+                                </AnchorPane>
+                            </content>
+                        </Tab>
+                        <Tab text="Målinger">
+                            <content>
+                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                    <children>
+                                        <LineChart fx:id="graph" layoutX="31.0" layoutY="86.0" prefHeight="400.0" prefWidth="600.0">
+                                            <xAxis>
+                                                <CategoryAxis side="BOTTOM" />
+                                            </xAxis>
+                                            <yAxis>
+                                                <NumberAxis side="LEFT" />
+                                            </yAxis>
+                                        </LineChart>
+                                        <CheckBox fx:id="spO2Button" layoutX="207.0" layoutY="47.0" mnemonicParsing="false" onAction="#toggleSeriesRealTime" selected="true" text="SpO2" />
+                                        <CheckBox fx:id="tempButton" layoutX="272.0" layoutY="47.0" mnemonicParsing="false" onAction="#toggleSeriesRealTime" selected="true" text="Temperatur" />
+                                        <CheckBox fx:id="ekgButton" layoutX="368.0" layoutY="47.0" mnemonicParsing="false" onAction="#toggleSeriesRealTime" selected="true" text="EKG" />
+                                        <Label alignment="CENTER" layoutX="24.0" layoutY="14.0" style="&#10;" text="Målinger" textAlignment="CENTER" wrapText="false">
+                                            <font>
+                                                <Font size="18.0" fx:id="x12" />
+                                            </font>
+                                            <textFill>
+                                                <Color red="0.624" green="0.624" blue="0.624" fx:id="x22" />
+                                            </textFill>
+                                        </Label>
+                                        <CheckBox fx:id="pulsButton" layoutX="424.0" layoutY="47.0" mnemonicParsing="false" onAction="#toggleSeriesRealTime" selected="true" text="Puls" />
+                                    </children>
+                                </AnchorPane>
+                            </content>
+                        </Tab>
+                        <Tab text="Historik">
+                            <content>
+                                <AnchorPane fx:id="" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                    <children>
+                                        <LineChart fx:id="graphHistoric" layoutX="31.0" layoutY="86.0" prefHeight="400.0" prefWidth="600.0">
+                                            <xAxis>
+                                                <CategoryAxis side="BOTTOM" />
+                                            </xAxis>
+                                            <yAxis>
+                                                <NumberAxis side="LEFT" />
+                                            </yAxis>
+                                        </LineChart>
+                                        <CheckBox fx:id="spO2Button1" layoutX="207.0" layoutY="47.0" mnemonicParsing="false" onAction="#toggleSeriesHistoric" selected="true" text="SpO2" />
+                                        <CheckBox fx:id="tempButton1" layoutX="272.0" layoutY="47.0" mnemonicParsing="false" onAction="#toggleSeriesHistoric" selected="true" text="Temperatur" />
+                                        <CheckBox fx:id="ekgButton1" layoutX="368.0" layoutY="47.0" mnemonicParsing="false" onAction="#toggleSeriesHistoric" selected="true" text="EKG" />
+                                        <Label alignment="CENTER" layoutX="24.0" layoutY="14.0" style="&#10;" text="Historisk data" textAlignment="CENTER" wrapText="false">
+                                            <font>
+                                                <Font size="18.0" fx:id="x121" />
+                                            </font>
+                                            <textFill>
+                                                <Color red="0.624" green="0.624" blue="0.624" fx:id="x221" />
+                                            </textFill>
+                                        </Label>
+                                        <CheckBox fx:id="pulsButton1" layoutX="424.0" layoutY="47.0" mnemonicParsing="false" onAction="#toggleSeriesHistoric" selected="true" text="Puls" />
+                                        <DatePicker fx:id="fraDate" layoutX="184.0" layoutY="15.0" onAction="#dateChanged" promptText="Fra" />
+                                        <DatePicker fx:id="tilDate" layoutX="405.0" layoutY="15.0" onAction="#dateChanged" promptText="Til" />
+                                    </children>
+                                </AnchorPane>
+                            </content>
+                        </Tab>
+                    </tabs>
+                </TabPane>
+                <AnchorPane prefHeight="551.0" prefWidth="202.0">
+                    <children>
+                        <Label alignment="CENTER" layoutX="14.0" layoutY="14.0" style="&#10;" text="Patient" textAlignment="CENTER" wrapText="false">
+                            <font>
+                                <Font size="18.0" fx:id="x1" />
+                            </font>
+                            <textFill>
+                                <Color red="0.624" green="0.624" blue="0.624" fx:id="x2" />
+                            </textFill></Label>
+                        <ImageView fitHeight="152.0" fitWidth="145.0" layoutX="42.0" layoutY="61.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@user.png" />
+                            </image>
+                        </ImageView>
+                        <Label layoutX="28.0" layoutY="236.0" text="Navn" />
+                        <Label fx:id="patientNavnLabel" layoutX="123.0" layoutY="236.0" text="Ingen" />
+                        <Label layoutX="28.0" layoutY="258.0" text="Alder" />
+                        <Label fx:id="patientAlderLabel" layoutX="123.0" layoutY="258.0" text="0 år" />
+                        <Label layoutX="14.0" layoutY="486.0" text="Puls">
+                            <font>
+                                <Font size="25.0" />
+                            </font>
+                        </Label>
+                        <Label fx:id="pulsLabel" layoutX="15.0" layoutY="522.0" text="?BPM" textFill="#ea0b0b">
+                            <font>
+                                <Font name="System Bold" size="12.0" />
+                            </font></Label>
+                        <Label layoutX="73.0" layoutY="486.0" text="SpO2">
+                            <font>
+                                <Font size="25.0" />
+                            </font>
+                        </Label>
+                        <Label fx:id="spO2Label" layoutX="95.0" layoutY="522.0" text="?%" textFill="RED">
+                            <font>
+                                <Font name="System Bold" size="12.0" />
+                            </font>
+                        </Label>
+                        <Label layoutX="151.0" layoutY="486.0" text="Temp">
+                            <font>
+                                <Font size="25.0" />
+                            </font>
+                        </Label>
+                        <Label fx:id="tempLabel" layoutX="170.0" layoutY="522.0" text="38°C" textFill="#1ab736">
+                            <font>
+                                <Font name="System Bold" size="12.0" />
+                            </font>
+                        </Label>
+                        <Label layoutX="28.0" layoutY="277.0" text="CPR" />
+                        <Label fx:id="patientCprLabel" layoutX="123.0" layoutY="277.0" text="000000-0000" />
+                    </children>
+                </AnchorPane>
+            </items>
+            <opaqueInsets>
+                <Insets />
+            </opaqueInsets>
+        </SplitPane>
+        <HBox id="HBox" alignment="CENTER_LEFT" spacing="5.0" VBox.vgrow="NEVER">
+            <children>
+                <Label id="loggedInLabel" fx:id="loggedInLabel" maxHeight="1.7976931348623157E308" maxWidth="-1.0" text="Du er logget ind som John (Overlæge)" HBox.hgrow="ALWAYS">
+                    <font>
+                        <Font size="11.0" fx:id="x3" />
+                    </font>
+                    <textFill>
+                        <Color red="0.625" green="0.625" blue="0.625" fx:id="x4" />
+                    </textFill>
+                </Label>
+                <Pane prefHeight="-1.0" prefWidth="-1.0" HBox.hgrow="ALWAYS" />
+                <Label fx:id="statusLabel" font="$x3" maxWidth="-1.0" text="Forbundet til Vital databasen. Sensor er ikke forbundet." textFill="$x4" HBox.hgrow="NEVER" />
+            </children>
+            <padding>
+                <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
+            </padding>
+        </HBox>
+    </children>
 </VBox>

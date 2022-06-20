@@ -36,11 +36,11 @@ public class SensorRecorder implements Runnable {
     }
 
     public void resetSerialConnection(){
-        System.out.println("Resetting serial connection.");
-        dc.setStatusSensorError();
         if(serialPort == null){
             return;
         }
+        System.out.println("Resetting serial connection.");
+        dc.setStatusSensorError();
         if(serialPort.isOpen()){
             try {
                 serialPort.closePort();
@@ -48,7 +48,7 @@ public class SensorRecorder implements Runnable {
         }
         reader = null;
         out = null;
-        serialPort = null;
+        setSerialPort(null);
     }
 
     public volatile SerialPort serialPort;
@@ -69,8 +69,17 @@ public class SensorRecorder implements Runnable {
     }
 
     private int fetchSample(){
-        serialPort.readBytes(buffer, 2);
-        return (buffer[1] << 8) + buffer[0];
+        if(serialPort != null & serialPort.bytesAvailable() > 1) {
+            serialPort.readBytes(buffer, 2);
+            return (buffer[1] << 8) + buffer[0];
+        }
+        return -1; // da ADC ikke kan returnere -1, så kan vi bruge den som error
+    }
+    private void waitForData(){
+        // Optimized busy wait
+        while(serialPort.bytesAvailable() > 1){
+            Thread.onSpinWait();
+        }
     }
 
     @Override
@@ -83,7 +92,9 @@ public class SensorRecorder implements Runnable {
                 // Setup code
                 dc.setStatusSensorError();
                 while (this.serialPort == null || subject == null ) {
-                    Thread.onSpinWait();
+                    Thread.onSpinWait(); // meget effektiv.
+                    //Thread.sleep(500);
+                    //Platform.runLater(() -> dc.setupSensors());
                     // we are waiting for the user to choose an appropriate serialPort
                 }
 
@@ -96,7 +107,7 @@ public class SensorRecorder implements Runnable {
                     serialPort.setDTR();
                     dc.setStatusSensorRecording();
                 }catch (SerialPortInvalidPortException ex){
-                    //Sensor must have disconnected in the meantime
+                    //Sensor must have disconnected in the meantime or other program is using the serial
                     ex.printStackTrace();
                     System.out.println(ex);
                     resetSerialConnection();
@@ -108,12 +119,11 @@ public class SensorRecorder implements Runnable {
                 // Separate thread code
                 int errors = 0; // increment each time we get an error, if this exceeds 3 times, we reset!
                 while (serialPort != null && serialPort.isOpen()) {
-                    if(serialPort.bytesAvailable() > 1){ // skal være 1 i bytes
                         //int sample = fetchSample();
                         // data er klart
-                        int sample = 0;
                         try {
-                            sample = fetchSample();
+                            // nanoTime giver ikke UTC time
+                            subject.setEkgData(new EKG(fetchSample(), System.currentTimeMillis(), false));
                         } catch (NumberFormatException ex) {
                             // Hvis der er opstår 3 fejl i træk, så beder vi brugeren om at vælge en ny sensor, da det kan være vi er connected forkert.
                             if(errors == 3){
@@ -122,10 +132,8 @@ public class SensorRecorder implements Runnable {
                                 errors++;
                             }
                         }
-                        // nanoTime giver ikke UTC time
-                        subject.setEkgData(new EKG(sample, System.currentTimeMillis(), false));
-                    }
                 }
+                // SerialPort er blevet null eller lukket
                 resetSerialConnection();
             }
 
