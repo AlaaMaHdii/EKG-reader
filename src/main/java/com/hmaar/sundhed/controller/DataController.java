@@ -1,6 +1,7 @@
 package com.hmaar.sundhed.controller;
 import com.fazecast.jSerialComm.SerialPort;
 import com.hmaar.sundhed.model.*;
+import com.hmaar.sundhed.model.implementation.EKG;
 import com.hmaar.sundhed.model.interfaces.*;
 import com.hmaar.sundhed.model.recorders.SensorRecorder;
 import javafx.application.Platform;
@@ -262,7 +263,7 @@ public class DataController implements Initializable, Observer {
         }
 
         public void setupSensors(){
-                SerialPort SerialPorts[] = sensorRecorder.getSerialPorts();
+                SerialPort SerialPorts[] = SerialPort.getCommPorts();
                 for (SerialPort serialPort: SerialPorts) {
                         // for hver serialport fundet
                         String portName = serialPort.getPortDescription();
@@ -400,11 +401,11 @@ public class DataController implements Initializable, Observer {
 
         public void cleanUpGraphs(){
                 for(int i = 0; i < graph.getData().size(); i++){
-                        if(graph.getData().get(i).getData().size() > 40){
+                        if(graph.getData().get(i).getData().size() > 1500){
                                 int finalI = i;
                                 // denne kode køres i en thread. Vi prøver at undgå en race condition her.
                                 Platform.runLater(() -> {
-                                        graph.setAnimated(false);
+                                        //graph.setAnimated(false);
                                         graph.getData().get(finalI).getData().remove(0);
                                         //graph.setAnimated(true);
                                 });
@@ -415,7 +416,7 @@ public class DataController implements Initializable, Observer {
 
         private String convertToString(long unix){
                 Date date = new java.sql.Date(unix);
-                SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
+                SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss.SSS", Locale.getDefault());
                 return formatter.format(date);
         }
 
@@ -437,7 +438,7 @@ public class DataController implements Initializable, Observer {
         }
 
 
-        public void setEkgData(List<EKGData> ekgData) {
+        public void setEkgData(List<EKG> ekgData) {
                 // Tjek om der har været en opdatering i ekgDataet
                 for (EKGData ekg: ekgData) {
                         if(ekg != this.ekgData && ekgGraf != null && ekg != null){
@@ -445,9 +446,11 @@ public class DataController implements Initializable, Observer {
                                 this.ekgData = ekg;
                                 // Placere det nye data i serien.
                                 Platform.runLater(() -> ekgGraf.getData().add(new XYChart.Data(convertToString(ekg.getTime()), ekg.getVoltage())));
+                                cleanUpGraphs();
                         }
                 }
-                user.uploadLog(patient.getId(), (SQLData) ekgData);
+                List<SQLData> sqlDatas = (List<SQLData>)(List<?>) ekgData;
+                user.uploadLog(patient.getId(), sqlDatas);
         }
 
         public void setPulsData(PulsData pulsData) {

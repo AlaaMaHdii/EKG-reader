@@ -31,7 +31,7 @@ public class EkgConsumer implements Runnable{
             if (dataList.size()<MAX_SIZE & ekgData != null) {
                 dataList.add((EKG) ekgData);
             }else{
-                System.out.println("Dropping data...");
+                //System.out.println("Dropping data...");
             }
         }
     }
@@ -60,19 +60,23 @@ public class EkgConsumer implements Runnable{
                     break;
                 }
             }
-            if(dataList.size() > 250) {
-                List<EKG> listCopy;
-                synchronized (dataList) {
-                    //Take a copy of list and empty it;
-                    listCopy = new LinkedList<>(dataList);
-                    dataList.clear();
-                }
-                // Process data
-                for (EKG ekg : listCopy) {
-                    dc.setEkgData(ekg);
-                }
-                dc.cleanUpGraphs();
+            System.out.println(dataList.size());
+            List<EKG> listCopy = null;
+            synchronized (dataList) {
+                //Take a copy of list and empty it;
+                listCopy = new LinkedList<>(dataList);
+                dataList.clear();
+                System.out.println(dataList.size());
             }
+            long start = System.currentTimeMillis();
+            // Process data
+            if(listCopy != null) {
+                dc.setEkgData(listCopy);
+                long finish = System.currentTimeMillis();
+                long timeElapsed = finish - start;
+                System.out.println("Cleared " + listCopy.size() + " data in " + timeElapsed + "ms");
+            }
+
         }
     }
 }

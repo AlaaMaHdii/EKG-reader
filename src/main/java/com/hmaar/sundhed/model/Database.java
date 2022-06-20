@@ -30,7 +30,7 @@ public class Database {
     public void connectToDb(){
         try{
             conn = DriverManager.getConnection(
-                    "jdbc:mysql://mysql-db.caprover.diplomportal.dk:3306/" + schema,"s190434","YvpU8sXPtIeRg7HwZR1Gr");
+                    "jdbc:mysql://mysql-db.caprover.diplomportal.dk:3306/" + schema+"?rewriteBatchedStatements=true","s190434","YvpU8sXPtIeRg7HwZR1Gr");
         }catch(SQLException e){
             System.out.println(e);
         }
@@ -178,7 +178,8 @@ public class Database {
     public boolean uploadLog(int patientId, AuthenticatedUser user, List<SQLData> logs){
         PreparedStatement pstmt = null;
         try {
-            pstmt = this.conn.prepareStatement("INSERT INTO logging (patientId, staffWhoLogged, type, value, timestamp) VALUES (?, ?, ?, ?, ?);");
+            conn.setAutoCommit(false);
+            pstmt = this.conn.prepareStatement("INSERT INTO logging (patientId, staffWhoLogged, type, value, timestamp) VALUES (?, ?, ?, ?, ?)");
             for (SQLData log: logs) {
                 pstmt.setInt(1, patientId);
                 pstmt.setInt(2, user.id);
@@ -188,6 +189,7 @@ public class Database {
                 pstmt.addBatch();
             }
             pstmt.executeBatch();
+            conn.setAutoCommit(true);
             return true; //  boolean er om sql kom igennem eller om der skete en fejl
         } catch (SQLException e) {
             return false;

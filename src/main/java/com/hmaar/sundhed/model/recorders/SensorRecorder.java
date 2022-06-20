@@ -113,16 +113,13 @@ public class SensorRecorder implements Runnable {
             // Separate thread code
             int errors = 0; // increment each time we get an error, if this exceeds 3 times, we reset!
             while (serialPort != null && serialPort.isOpen()) {
-                    if(serialPort.bytesAvailable() > 0){ // skal være 1 i bytes
+                    if(serialPort.bytesAvailable() > 1){ // skal være 1 i bytes
                         //int sample = fetchSample();
                         // data er klart
-                        String sampleString = null;
                         int sample = 0;
                         try {
-                            // Parse
-                            sampleString = reader.readLine();
-                            sample = Integer.parseInt(sampleString);
-                        } catch (NumberFormatException | IOException ex) {
+                            sample = fetchSample();
+                        } catch (NumberFormatException ex) {
                             // Hvis der er opstår 3 fejl i træk, så beder vi brugeren om at vælge en ny sensor, da det kan være vi er connected forkert.
                             if(errors == 3){
                                 resetSerialConnection();
@@ -130,12 +127,7 @@ public class SensorRecorder implements Runnable {
                                 errors++;
                             }
                         }
-                        if (sampleString != null && sample != 0){
-                            // Notify consumers.
                             subject.setEkgData(new EKG(sample, System.currentTimeMillis(), false));
-                            // Reset antal fejl.
-                            errors = 0;
-                        }
                     }
             }
             resetSerialConnection();
