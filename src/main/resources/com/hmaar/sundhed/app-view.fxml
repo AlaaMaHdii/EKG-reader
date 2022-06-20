@@ -73,7 +73,7 @@
                     <items>
                         <Menu fx:id="connectSubMenu" mnemonicParsing="false" text="Forbind" />
                         <MenuItem fx:id="reloadMenuItem" mnemonicParsing="false" onAction="#setupSensors" text="Genopfrisk" />
-                        <MenuItem fx:id="disconnectMenuItem" disable="true" mnemonicParsing="false" text="Afbryd forbindelse" />
+                        <MenuItem fx:id="disconnectMenuItem" disable="true" onAction="#disconnectFromSensor" mnemonicParsing="false" text="Afbryd forbindelse" />
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Hjælp">

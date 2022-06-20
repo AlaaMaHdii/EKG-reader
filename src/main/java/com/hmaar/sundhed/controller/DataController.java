@@ -255,15 +255,32 @@ public class DataController implements Initializable, Observer {
         }
 
         public void setStatusSensorError(){
-                statusLabel.setText("Forbundet til Vital databasen. Sensor er ikke forbundet.");
+                Platform.runLater(() -> {
+                        statusLabel.setText("Forbundet til Vital databasen. Sensor er ikke forbundet.");
+                        disconnectMenuItem.setDisable(true);
+                        connectSubMenu.setDisable(false);
+                });
         }
 
         public void setStatusSensorRecording(){
-                statusLabel.setText("Forbundet til Vital databasen. Sensor opsamler korrekt.");
+                Platform.runLater(() -> {
+                        statusLabel.setText("Forbundet til Vital databasen. Sensor opsamler korrekt.");
+                        disconnectMenuItem.setDisable(false);
+                        connectSubMenu.setDisable(true);
+
+                });
+        }
+
+
+        public void disconnectFromSensor(){
+                if(sensorRecorder != null){
+                        sensorRecorder.resetSerialConnection();
+                }
         }
 
         public void setupSensors(){
                 SerialPort SerialPorts[] = SerialPort.getCommPorts();
+                connectSubMenu.getItems().clear(); // clear all
                 for (SerialPort serialPort: SerialPorts) {
                         // for hver serialport fundet
                         String portName = serialPort.getPortDescription();

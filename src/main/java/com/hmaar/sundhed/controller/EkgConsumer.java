@@ -10,7 +10,7 @@ import java.util.List;
     Der bruges klassen EKG i stedet DataDTO.
     Problemet er fundamental.
     Optimalt har det været at lave en interface for alle sensor-datatyper, som har 3 variabler, timestamp, data og type.
-    I stedet for at have 4 forskellige interfaces, og implementationer.
+    I stedet for at have 4 forskellige interfaces, og implementation som fremvist af eksempelkoderne.
  */
 
 public class EkgConsumer implements Runnable{
@@ -60,13 +60,11 @@ public class EkgConsumer implements Runnable{
                     break;
                 }
             }
-            System.out.println(dataList.size());
             List<EKG> listCopy = null;
             synchronized (dataList) {
                 //Take a copy of list and empty it;
                 listCopy = new LinkedList<>(dataList);
                 dataList.clear();
-                System.out.println(dataList.size());
             }
             long start = System.currentTimeMillis();
             // Process data
@@ -76,7 +74,6 @@ public class EkgConsumer implements Runnable{
                 long timeElapsed = finish - start;
                 System.out.println("Cleared " + listCopy.size() + " data in " + timeElapsed + "ms");
             }
-
         }
     }
 }

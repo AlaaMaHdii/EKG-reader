@@ -37,6 +37,7 @@ public class SensorRecorder implements Runnable {
 
     public void resetSerialConnection(){
         System.out.println("Resetting serial connection.");
+        dc.setStatusSensorError();
         if(serialPort == null){
             return;
         }
@@ -60,15 +61,6 @@ public class SensorRecorder implements Runnable {
         this.subject = Subject;
     }
 
-    // This will update the available serial ports in the GUI
-    public void updateComGui(){
-
-    }
-
-    // This will update the status in the GUI, in case we run in an error, we will show it to the user.
-    public void updateStatusGui(){
-
-    }
 
     public void sendMessage(String msg){
         if(serialPort != null && serialPort.isOpen()){
@@ -86,33 +78,36 @@ public class SensorRecorder implements Runnable {
         getDataController().setSensorRecorder(this);
         Platform.runLater(() ->dc.setupSensors());
         // Main infinite loop
-        while (true) {
-            // Setup code
-            while (this.serialPort == null || subject == null ) {
-                Thread.onSpinWait();
-                // we are waiting for the user to choose an appropriate serialPort
-            }
+        try{
+            while (true) {
+                // Setup code
+                dc.setStatusSensorError();
+                while (this.serialPort == null || subject == null ) {
+                    Thread.onSpinWait();
+                    // we are waiting for the user to choose an appropriate serialPort
+                }
 
-            // Connect to the port
-            try{
-                serialPort.openPort();
-                serialPort.setComPortParameters(115200, 8, 1, 0);
-                serialPort.setFlowControl(SerialPort.FLOW_CONTROL_DISABLED);
-                serialPort.setComPortTimeouts(SerialPort.TIMEOUT_READ_BLOCKING, 100,100);
-                serialPort.setDTR();
-            }catch (SerialPortInvalidPortException ex){
-                //Sensor must have disconnected in the meantime
-                ex.printStackTrace();
-                System.out.println(ex);
-                resetSerialConnection();
-            }
-            // Setup in and out
-            reader = new BufferedReader(new InputStreamReader(serialPort.getInputStream()));
-            out = new PrintWriter(serialPort.getOutputStream());
+                // Connect to the port
+                try{
+                    serialPort.openPort();
+                    serialPort.setComPortParameters(115200, 8, 1, 0);
+                    serialPort.setFlowControl(SerialPort.FLOW_CONTROL_DISABLED);
+                    serialPort.setComPortTimeouts(SerialPort.TIMEOUT_READ_BLOCKING, 100,100);
+                    serialPort.setDTR();
+                    dc.setStatusSensorRecording();
+                }catch (SerialPortInvalidPortException ex){
+                    //Sensor must have disconnected in the meantime
+                    ex.printStackTrace();
+                    System.out.println(ex);
+                    resetSerialConnection();
+                }
+                // Setup in and out
+                //reader = new BufferedReader(new InputStreamReader(serialPort.getInputStream()));
+                //out = new PrintWriter(serialPort.getOutputStream());
 
-            // Separate thread code
-            int errors = 0; // increment each time we get an error, if this exceeds 3 times, we reset!
-            while (serialPort != null && serialPort.isOpen()) {
+                // Separate thread code
+                int errors = 0; // increment each time we get an error, if this exceeds 3 times, we reset!
+                while (serialPort != null && serialPort.isOpen()) {
                     if(serialPort.bytesAvailable() > 1){ // skal være 1 i bytes
                         //int sample = fetchSample();
                         // data er klart
@@ -127,10 +122,15 @@ public class SensorRecorder implements Runnable {
                                 errors++;
                             }
                         }
-                            subject.setEkgData(new EKG(sample, System.currentTimeMillis(), false));
+                        // nanoTime giver ikke UTC time
+                        subject.setEkgData(new EKG(sample, System.currentTimeMillis(), false));
                     }
+                }
+                resetSerialConnection();
             }
-            resetSerialConnection();
+
+        }catch (Exception ex){
+            ex.printStackTrace();
         }
     }
 }
