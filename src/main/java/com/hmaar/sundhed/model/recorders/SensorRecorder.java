@@ -67,7 +67,7 @@ public class SensorRecorder implements Runnable {
             out.println(msg);
         }
     }
-
+    // Læs bytes
     private int fetchSample(){
         if(serialPort != null & serialPort.bytesAvailable() > 1) {
             serialPort.readBytes(buffer, 2);
@@ -101,9 +101,18 @@ public class SensorRecorder implements Runnable {
                 // Connect to the port
                 try{
                     serialPort.openPort();
+                    serialPort.addDataListener(new SerialPortDataListener() {
+                        @Override
+                        public int getListeningEvents() { return SerialPort.LISTENING_EVENT_PORT_DISCONNECTED; }
+                        @Override
+                        public void serialEvent(SerialPortEvent event)
+                        {
+                            resetSerialConnection();
+                        }
+                    });
                     serialPort.setComPortParameters(115200, 8, 1, 0);
-                    serialPort.setFlowControl(SerialPort.FLOW_CONTROL_DISABLED);
                     serialPort.setComPortTimeouts(SerialPort.TIMEOUT_READ_BLOCKING, 100,100);
+                    serialPort.setFlowControl(SerialPort.FLOW_CONTROL_DTR_ENABLED);
                     serialPort.setDTR();
                     dc.setStatusSensorRecording();
                 }catch (SerialPortInvalidPortException ex){
@@ -113,25 +122,24 @@ public class SensorRecorder implements Runnable {
                     resetSerialConnection();
                 }
                 // Setup in and out
-                //reader = new BufferedReader(new InputStreamReader(serialPort.getInputStream()));
-                //out = new PrintWriter(serialPort.getOutputStream());
+                reader = new BufferedReader(new InputStreamReader(serialPort.getInputStream()));
+                out = new PrintWriter(serialPort.getOutputStream());
 
                 // Separate thread code
                 int errors = 0; // increment each time we get an error, if this exceeds 3 times, we reset!
                 while (serialPort != null && serialPort.isOpen()) {
-                        //int sample = fetchSample();
-                        // data er klart
-                        try {
-                            // nanoTime giver ikke UTC time
-                            subject.setEkgData(new EKG(fetchSample(), System.currentTimeMillis(), false));
-                        } catch (NumberFormatException ex) {
-                            // Hvis der er opstår 3 fejl i træk, så beder vi brugeren om at vælge en ny sensor, da det kan være vi er connected forkert.
-                            if(errors == 3){
-                                resetSerialConnection();
-                            }else{
-                                errors++;
-                            }
+                    // data er klart
+                    try {
+                        // nanoTime giver ikke UTC time
+                        subject.setEkgData(new EKG(Integer.parseInt(reader.readLine()), System.currentTimeMillis(), false));
+                    } catch (NumberFormatException ex) {
+                        // Hvis der er opstår 3 fejl i træk, så beder vi brugeren om at vælge en ny sensor, da det kan være vi er connected forkert.
+                        if(errors == 3){
+                            resetSerialConnection();
+                        }else{
+                            errors++;
                         }
+                    }
                 }
                 // SerialPort er blevet null eller lukket
                 resetSerialConnection();
