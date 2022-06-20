@@ -359,48 +359,48 @@ public class DataController implements Initializable, Observer {
                         if (pulsData.getPuls() < 50 || pulsData.getPuls() > 130) {
                                 // kritisk
                                 user.uploadWarning(patient.getId(), "Puls er kritisk: " + (double) Math.round(pulsData.getPuls() * 100) / 100 + "BPM", "", pulsData.getPuls(), pulsData.getTime(), this);
-                                pulsLabel.setTextFill(red);
+                                Platform.runLater(() -> pulsLabel.setTextFill(red));
                         } else if (pulsData.getPuls() < 60 || pulsData.getPuls() > 100) {
                                 // info
                                 user.uploadWarning(patient.getId(), "Puls er unormal: " + (double) Math.round(pulsData.getPuls() * 100) / 100 + "BPM", "", pulsData.getPuls(),pulsData.getTime(), this);
-                                pulsLabel.setTextFill(yellow);
+                                Platform.runLater(() -> pulsLabel.setTextFill(yellow));
                         } else if (pulsData.getPuls() > 60 || pulsData.getPuls() < 130) {
                                 // ok
-                                pulsLabel.setTextFill(green);
+                                Platform.runLater(() -> pulsLabel.setTextFill(green));
                         }
-                        pulsLabel.setText((double) Math.round(pulsData.getPuls() * 100) / 100 + "BPM");
+                        Platform.runLater(() -> pulsLabel.setText((double) Math.round(pulsData.getPuls() * 100) / 100 + "BPM"));
                 }
 
                 if(tempData != null && tempLabel != null) {
                         if (tempData.getTemp() < 36 || tempData.getTemp() > 39) {
                                 // kritisk
                                 user.uploadWarning(patient.getId(),"Temperatur er kritisk: " + (double) Math.round(tempData.getTemp() * 100) / 100 + "°C", "", tempData.getTemp(), tempData.getTime(), this);
-                                tempLabel.setTextFill(red);
+                                Platform.runLater(() -> tempLabel.setTextFill(red));
                         } else if (tempData.getTemp() == 36 || tempData.getTemp() == 39) {
                                 user.uploadWarning(patient.getId(), "Temperatur er unormal: " + (double) Math.round(tempData.getTemp() * 100) / 100 + "°C", "", tempData.getTemp(),tempData.getTime(), this);
                                 // info
-                                tempLabel.setTextFill(yellow);
+                                Platform.runLater(() -> tempLabel.setTextFill(yellow));
                         } else if (tempData.getTemp() == 37 || tempData.getTemp() == 39) {
                                 // ok
-                                tempLabel.setTextFill(green);
+                                Platform.runLater(() -> tempLabel.setTextFill(green));
                         }
-                        tempLabel.setText((double) Math.round(tempData.getTemp() * 100) / 100 + "°C");
+                        Platform.runLater(() -> tempLabel.setText((double) Math.round(tempData.getTemp() * 100) / 100 + "°C"));
                 }
 
                 if(spO2Data != null && tempLabel != null) {
                         if (spO2Data.getSpO2() < 94) {
                                 // kritisk
                                 user.uploadWarning(patient.getId(), "SpO2 er kritisk: " + (double) Math.round(spO2Data.getSpO2() * 100) / 100 + "%", "", spO2Data.getSpO2(), spO2Data.getTime(),this);
-                                spO2Label.setTextFill(red);
+                                Platform.runLater(() -> spO2Label.setTextFill(red));
                         } else if (spO2Data.getSpO2() >= 94 || spO2Data.getSpO2() < 96) {
                                 user.uploadWarning(patient.getId(), "SpO2 er unormal: " + (double) Math.round(spO2Data.getSpO2() * 100) / 100 + "%", "", spO2Data.getSpO2(),spO2Data.getTime(),this);
                                 // info
-                                spO2Label.setTextFill(yellow);
+                                Platform.runLater(() -> spO2Label.setTextFill(yellow));
                         } else if (spO2Data.getSpO2() == 100 || spO2Data.getSpO2() >= 97) {
                                 // ok
-                                spO2Label.setTextFill(green);
+                                Platform.runLater(() -> spO2Label.setTextFill(green));
                         }
-                        spO2Label.setText((double) Math.round(spO2Data.getSpO2() * 100) / 100 + "%");
+                        Platform.runLater(() -> spO2Label.setText((double) Math.round(spO2Data.getSpO2() * 100) / 100 + "%"));
                 }
 
         }
@@ -418,7 +418,7 @@ public class DataController implements Initializable, Observer {
 
         public void cleanUpGraphs(){
                 for(int i = 0; i < graph.getData().size(); i++){
-                        if(graph.getData().get(i).getData().size() > 1500){
+                        if(graph.getData().get(i).getData().size() > 800){
                                 int finalI = i;
                                 // denne kode køres i en thread. Vi prøver at undgå en race condition her.
                                 Platform.runLater(() -> {
@@ -428,7 +428,7 @@ public class DataController implements Initializable, Observer {
                                 });
                         }
                 }
-                Platform.runLater(this::checkForAnomalies);
+                checkForAnomalies();
         }
 
         private String convertToString(long unix){
@@ -466,7 +466,7 @@ public class DataController implements Initializable, Observer {
                                 cleanUpGraphs();
                         }
                 }
-                List<SQLData> sqlDatas = (List<SQLData>)(List<?>) ekgData;
+                List<SQLData> sqlDatas = (List<SQLData>)(List<?>) ekgData; // ekgdata til sqldata
                 user.uploadLog(patient.getId(), sqlDatas);
         }
 
