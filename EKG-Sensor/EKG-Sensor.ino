@@ -41,7 +41,5 @@ int getECGADC(){
 }
 
 void measureAndSend(){
-   int sample = getECGADC();
-   Serial.write(sample & 0xFF); // bitwise operation til at få lowerbyte
-   Serial.write(sample >> 8); // shift dem til venstre for at få higherbyte
+   Serial.println(getECGADC());
 }

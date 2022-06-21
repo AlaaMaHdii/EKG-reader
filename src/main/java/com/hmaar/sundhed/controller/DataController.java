@@ -259,6 +259,7 @@ public class DataController implements Initializable, Observer {
                         statusLabel.setText("Forbundet til Vital databasen. Sensor er ikke forbundet.");
                         disconnectMenuItem.setDisable(true);
                         connectSubMenu.setDisable(false);
+                        setupSensors();
                 });
         }
 
