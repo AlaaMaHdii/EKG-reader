@@ -213,7 +213,7 @@
                                 <Font size="25.0" />
                             </font>
                         </Label>
-                        <Label fx:id="tempLabel" layoutX="170.0" layoutY="522.0" text="?" textFill="#1ab736">
+                        <Label fx:id="tempLabel" layoutX="170.0" layoutY="522.0" text="?°C" textFill="#1ab736">
                             <font>
                                 <Font name="System Bold" size="12.0" />
                             </font>

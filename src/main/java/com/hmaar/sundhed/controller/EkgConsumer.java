@@ -7,17 +7,10 @@ import com.hmaar.sundhed.model.interfaces.EKGData;
 import java.util.LinkedList;
 import java.util.List;
 
-/*
-    Der bruges klassen EKG i stedet DataDTO.
-    Problemet er fundamental.
-    Optimalt har det været at lave en interface for alle sensor-datatyper, som har 3 variabler, timestamp, data og type.
-    I stedet for at have 4 forskellige interfaces, og implementation som fremvist af eksempelkoderne.
- */
-
 public class EkgConsumer implements Runnable{
     private static final int MAX_SIZE = 1500;
 
-    private static final double THRESHOLD = 0.0055; //bpm
+    private static final double THRESHOLD = 0.0055; //I millivolt
     private final LinkedList<EKG> dataList = new LinkedList<>();
     private LinkedList<EKG> dataListForBpm = new LinkedList<>();
     private final Object emptyLock = new Object();
