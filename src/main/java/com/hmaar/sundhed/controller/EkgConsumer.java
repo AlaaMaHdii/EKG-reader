@@ -65,6 +65,7 @@ public class EkgConsumer implements Runnable{
                         timeElapsed = 0;
                         firstBpm = null;
                         secondBpm = null;
+                        return;
                     }
                     System.out.println(bpm);
                     dc.setPulsData(new Puls(bpm, firstBpm.getTime()));
