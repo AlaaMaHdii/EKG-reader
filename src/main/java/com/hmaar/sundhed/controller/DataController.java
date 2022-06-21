@@ -148,8 +148,8 @@ public class DataController implements Initializable, Observer {
                 ekgConsumerThread = new Thread(ekgConsumer);
                 ekgConsumerThread.start();
 
-
                 graph.setTitle("Realtime Data");
+                graph.setCreateSymbols(false);
                 pulsGraf = new XYChart.Series<>();
                 pulsGraf.setName("Puls");
 
