@@ -53,7 +53,7 @@ public class EkgConsumer implements Runnable{
                 if(firstBpm == 0) {
                     firstBpm = i;
                 }else{
-                    if(i - firstBpm < 100){
+                    if(i - firstBpm < 30){
                         return;
                     }
                     secondBpm = i;
