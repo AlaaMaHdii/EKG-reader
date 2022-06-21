@@ -150,7 +150,7 @@ public class DataController implements Initializable, Observer {
                 ekgConsumerThread.start();
 
 
-                Rectangle rect = new Rectangle(0, 0);
+                rect = new Rectangle(0, 0);
                 rect.setVisible(false);
 
                 graph.setTitle("Realtime Data");
