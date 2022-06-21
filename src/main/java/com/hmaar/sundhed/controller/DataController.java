@@ -284,7 +284,7 @@ public class DataController implements Initializable, Observer {
                 connectSubMenu.getItems().clear(); // clear all
                 for (SerialPort serialPort: SerialPorts) {
                         // for hver serialport fundet
-                        String portName = serialPort.getPortDescription();
+                        String portName = serialPort.getSystemPortName();
                         MenuItem menuItem = new MenuItem(portName);
                         menuItem.setOnAction(t -> sensorRecorder.setSerialPort(serialPort));
                         connectSubMenu.getItems().add(menuItem);

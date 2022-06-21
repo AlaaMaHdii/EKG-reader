@@ -10,7 +10,7 @@ import java.util.List;
 public class EkgConsumer implements Runnable{
     private static final int MAX_SIZE = 1500;
 
-    private static final double THRESHOLD = 0.0055; //I millivolt
+    private static final double THRESHOLD = 0.00125; //I millivolt
     private final LinkedList<EKG> dataList = new LinkedList<>();
     private LinkedList<EKG> dataListForBpm = new LinkedList<>();
     private final Object emptyLock = new Object();
@@ -53,6 +53,9 @@ public class EkgConsumer implements Runnable{
                 if(firstBpm == 0) {
                     firstBpm = i;
                 }else{
+                    if(i - firstBpm < 100){
+                        return;
+                    }
                     secondBpm = i;
                     double bpm = Math.round(60/((secondBpm - firstBpm) * 0.001200)); // 0.001200 er delay
                     // Somehow this code sometimes get negative
