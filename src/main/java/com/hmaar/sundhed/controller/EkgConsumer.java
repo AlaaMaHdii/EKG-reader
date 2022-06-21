@@ -10,7 +10,7 @@ import java.util.List;
 public class EkgConsumer implements Runnable{
     private static final int MAX_SIZE = 1500;
 
-    private static final double THRESHOLD = 0.00125; //I millivolt
+    private static final double THRESHOLD = 0.00150; //I millivolt
     private final LinkedList<EKG> dataList = new LinkedList<>();
     private LinkedList<EKG> dataListForBpm = new LinkedList<>();
     private int timeElapsed = 0;
