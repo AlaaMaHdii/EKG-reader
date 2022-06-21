@@ -60,9 +60,10 @@ public class EkgConsumer implements Runnable{
                     firstBpm = i;
                 }else{
                     secondBpm = i;
-                    double bpm = 60/((secondBpm - firstBpm) * 0.001200);
+                    double bpm = 60/((secondBpm - firstBpm) * 0.001200); // 0.001200 er delay
                     dc.setPulsData(new Puls(bpm, dataListForBpm.get(firstBpm).getTime()));
                     dataListForBpm.clear();
+                    return;
                 }
             }
         }
