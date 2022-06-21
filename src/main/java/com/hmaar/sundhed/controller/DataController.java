@@ -434,8 +434,8 @@ public class DataController implements Initializable, Observer {
         private String convertToString(long unix){
                 Date date = new java.sql.Date(unix);
                 SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss.SSS", Locale.getDefault());
-                return Instant.now().toString();
-                //return formatter.format(date);
+                //return Instant.now().toString();
+                return formatter.format(date);
         }
 
         private String convertToStringHistoric(long unix){
