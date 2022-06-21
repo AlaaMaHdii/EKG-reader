@@ -60,15 +60,11 @@ public class EkgConsumer implements Runnable{
                     }
                     secondBpm = dataListForBpm.get(i);
                     double bpm = Math.round(60/((timeElapsed) * 0.001200)); // 0.001200 er delay
-                    if(bpm > 300){
+                    if(bpm > 300 || bpm < 0){
                         dataListForBpm.clear();
                         timeElapsed = 0;
                         firstBpm = null;
                         secondBpm = null;
-                    }
-                    // Somehow this code sometimes get negative
-                    if(bpm < 0){
-                        return;
                     }
                     System.out.println(bpm);
                     dc.setPulsData(new Puls(bpm, firstBpm.getTime()));
