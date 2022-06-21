@@ -8,11 +8,13 @@ import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.chart.*;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 
 import java.net.URL;
 import java.text.SimpleDateFormat;
@@ -159,6 +161,9 @@ public class DataController implements Initializable, Observer {
 
                 ekgGraf = new XYChart.Series<>();
                 ekgGraf.setName("EKG");
+                Rectangle rect = new Rectangle(0, 0);
+                rect.setVisible(false);
+                ekgGraf.setNode(rect);
                 //NumberAxis xAxis = (NumberAxis) graph.getXAxis();
 
                 graph.getData().add(pulsGraf);
