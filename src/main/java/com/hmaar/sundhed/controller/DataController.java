@@ -456,7 +456,7 @@ public class DataController implements Initializable, Observer {
                         Platform.runLater(() -> {
                                 XYChart.Data data = new XYChart.Data(convertToString(ekgData.getTime()), ekgData.getVoltage());
                                 data.setNode(rect);
-                                ekgGraf.getData().add(new XYChart.Data(convertToString(ekgData.getTime()), ekgData.getVoltage()));
+                                ekgGraf.getData().add(data);
 
 
                         });
