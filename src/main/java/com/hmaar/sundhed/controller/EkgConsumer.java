@@ -13,10 +13,11 @@ public class EkgConsumer implements Runnable{
     private static final double THRESHOLD = 0.00125; //I millivolt
     private final LinkedList<EKG> dataList = new LinkedList<>();
     private LinkedList<EKG> dataListForBpm = new LinkedList<>();
+    private int timeElapsed = 0;
     private final Object emptyLock = new Object();
     private DataController dc;
-    private int firstBpm = 0;
-    private int secondBpm = 0;
+    private EKG firstBpm;
+    private EKG secondBpm;
 
     public EkgConsumer(DataController dc) {
         this.dc = dc;
@@ -50,25 +51,27 @@ public class EkgConsumer implements Runnable{
     public void calculateBPM(){
         for(int i = 0; i<dataListForBpm.size();i++){
             if(dataListForBpm.get(i).getVoltage() > THRESHOLD){
-                if(firstBpm == 0) {
-                    firstBpm = i;
+                if(firstBpm == null) {
+                    firstBpm = dataListForBpm.get(i);
                 }else{
-                    if((i - firstBpm) < 20){
+                    if(timeElapsed < 50){
+                        timeElapsed += 1;
                         return;
                     }
-                    secondBpm = i;
-                    double bpm = Math.round(60/((secondBpm - firstBpm) * 0.001200)); // 0.001200 er delay
+                    secondBpm = dataListForBpm.get(i);
+                    double bpm = Math.round(60/((timeElapsed) * 0.001200)); // 0.001200 er delay
                     // Somehow this code sometimes get negative
                     if(bpm < 0){
                         return;
                     }
                     System.out.println(bpm);
-                    dc.setPulsData(new Puls(bpm, dataListForBpm.get(firstBpm).getTime()));
+                    dc.setPulsData(new Puls(bpm, firstBpm.getTime()));
                     dataListForBpm.clear();
-                    firstBpm = 0;
-                    secondBpm = 0;
+                    timeElapsed = 0;
                     return;
                 }
+            }else{
+                timeElapsed += 1;
             }
         }
     }

@@ -128,6 +128,7 @@ public class DataController implements Initializable, Observer {
         private EkgConsumer ekgConsumer;
         private Thread ekgConsumerThread;
         public SensorRecorder sensorRecorder;
+        private Rectangle rect;
 
 
         @Override
@@ -149,6 +150,9 @@ public class DataController implements Initializable, Observer {
                 ekgConsumerThread.start();
 
 
+                Rectangle rect = new Rectangle(0, 0);
+                rect.setVisible(false);
+
                 graph.setTitle("Realtime Data");
                 pulsGraf = new XYChart.Series<>();
                 pulsGraf.setName("Puls");
@@ -161,9 +165,6 @@ public class DataController implements Initializable, Observer {
 
                 ekgGraf = new XYChart.Series<>();
                 ekgGraf.setName("EKG");
-                Rectangle rect = new Rectangle(0, 0);
-                rect.setVisible(false);
-                ekgGraf.setNode(rect);
                 //NumberAxis xAxis = (NumberAxis) graph.getXAxis();
 
                 graph.getData().add(pulsGraf);
@@ -452,7 +453,13 @@ public class DataController implements Initializable, Observer {
                         this.ekgData = ekgData;
                         // Placere det nye data i serien.
 
-                        Platform.runLater(() -> ekgGraf.getData().add(new XYChart.Data(convertToString(ekgData.getTime()), ekgData.getVoltage())));
+                        Platform.runLater(() -> {
+                                XYChart.Data data = new XYChart.Data(convertToString(ekgData.getTime()), ekgData.getVoltage());
+                                data.setNode(rect);
+                                ekgGraf.getData().add(new XYChart.Data(convertToString(ekgData.getTime()), ekgData.getVoltage()));
+
+
+                        });
                         user.uploadLog(patient.getId(), (SQLData) ekgData);
                 }
         }
