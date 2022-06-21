@@ -59,7 +59,7 @@ public class EkgConsumer implements Runnable{
                         return;
                     }
                     secondBpm = dataListForBpm.get(i);
-                    double bpm = Math.round(60/((timeElapsed) * 0.01200)); // 0.001200 er delay
+                    double bpm = Math.round(60/((timeElapsed) * 0.001200)); // 0.001200 er delay
                     // Somehow this code sometimes get negative
                     if(bpm < 0){
                         return;
