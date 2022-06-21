@@ -54,7 +54,7 @@ public class EkgConsumer implements Runnable{
                 if(firstBpm == null) {
                     firstBpm = dataListForBpm.get(i);
                 }else{
-                    if(timeElapsed < 100){
+                    if(timeElapsed < 400){
                         timeElapsed += 1;
                         return;
                     }
@@ -68,6 +68,8 @@ public class EkgConsumer implements Runnable{
                     dc.setPulsData(new Puls(bpm, firstBpm.getTime()));
                     dataListForBpm.clear();
                     timeElapsed = 0;
+                    firstBpm = null;
+                    secondBpm = null;
                     return;
                 }
             }else{
