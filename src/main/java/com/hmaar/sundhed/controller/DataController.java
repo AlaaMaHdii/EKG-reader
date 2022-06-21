@@ -128,7 +128,6 @@ public class DataController implements Initializable, Observer {
         private EkgConsumer ekgConsumer;
         private Thread ekgConsumerThread;
         public SensorRecorder sensorRecorder;
-        private Rectangle rect;
 
 
         @Override
@@ -149,9 +148,6 @@ public class DataController implements Initializable, Observer {
                 ekgConsumerThread = new Thread(ekgConsumer);
                 ekgConsumerThread.start();
 
-
-                rect = new Rectangle(0, 0);
-                rect.setVisible(false);
 
                 graph.setTitle("Realtime Data");
                 pulsGraf = new XYChart.Series<>();
@@ -455,7 +451,6 @@ public class DataController implements Initializable, Observer {
 
                         Platform.runLater(() -> {
                                 XYChart.Data data = new XYChart.Data(convertToString(ekgData.getTime()), ekgData.getVoltage());
-                                data.setNode(rect);
                                 ekgGraf.getData().add(data);
 
 

@@ -54,7 +54,7 @@ public class EkgConsumer implements Runnable{
                 if(firstBpm == null) {
                     firstBpm = dataListForBpm.get(i);
                 }else{
-                    if(timeElapsed < 100){
+                    if(timeElapsed < 500){
                         timeElapsed += 1;
                         return;
                     }
