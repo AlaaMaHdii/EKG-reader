@@ -18,7 +18,8 @@ public class EKG implements EKGData, SQLData {
     @Override
     public double getVoltage() {
         if(!ADCConverted){
-            return (voltage / 4095)*5; // 12bit adc (2**12-1) og 5v
+            //return ((voltage / 4095)*5); // 12bit adc (2**12-1) og 5v
+            return ((voltage / 4095)*5)/835; // 12bit adc (2**12-1) og 5v med gain
         }
         return voltage;
     }

@@ -29,8 +29,9 @@ public class EkgConsumer implements Runnable{
             //ekgdata kan være null pga observer-pattern.
             if (dataList.size()<MAX_SIZE & ekgData != null) {
                 dataList.add((EKG) ekgData);
-            }else{
-                //System.out.println("Dropping data...");
+            }
+            if (dataListForBpm.size()<MAX_SIZE & ekgData != null) {
+                dataListForBpm.add((EKG) ekgData);
             }
         }
     }
@@ -48,14 +49,21 @@ public class EkgConsumer implements Runnable{
 
     public void calculateBPM(){
         for(int i = 0; i<dataListForBpm.size();i++){
-            if(dataListForBpm.get(i).getVoltage() < THRESHOLD){
+            if(dataListForBpm.get(i).getVoltage() > THRESHOLD){
                 if(firstBpm == 0) {
                     firstBpm = i;
                 }else{
                     secondBpm = i;
-                    double bpm = 60/((secondBpm - firstBpm) * 0.001200); // 0.001200 er delay
+                    double bpm = Math.round(60/((secondBpm - firstBpm) * 0.001200)); // 0.001200 er delay
+                    // Somehow this code sometimes get negative
+                    if(bpm < 0){
+                        return;
+                    }
+                    System.out.println(bpm);
                     dc.setPulsData(new Puls(bpm, dataListForBpm.get(firstBpm).getTime()));
                     dataListForBpm.clear();
+                    firstBpm = 0;
+                    secondBpm = 0;
                     return;
                 }
             }
@@ -88,9 +96,7 @@ public class EkgConsumer implements Runnable{
                 long timeElapsed = finish - start;
                 System.out.println("Cleared " + listCopy.size() + " data in " + timeElapsed + "ms");
             }
-
-            // for bpm
-            dataListForBpm.addAll(listCopy);
+            //find bpm
             calculateBPM();
         }
     }

@@ -419,17 +419,14 @@ public class DataController implements Initializable, Observer {
 
         public void cleanUpGraphs(){
                 for(int i = 0; i < graph.getData().size(); i++){
-                        if(graph.getData().get(i).getData().size() > 800){
-                                int finalI = i;
+                        int finalI = i;
+                        if(graph.getData().get(finalI).getData().size() > 2000) {
                                 // denne kode køres i en thread. Vi prøver at undgå en race condition her.
-                                Platform.runLater(() -> {
-                                        //graph.setAnimated(false);
-                                        graph.getData().get(finalI).getData().remove(0);
-                                        //graph.setAnimated(true);
-                                });
+                                //graph.setAnimated(false);
+                                Platform.runLater(() -> graph.getData().get(finalI).getData().remove(0));
+                                //graph.setAnimated(true);
                         }
                 }
-                checkForAnomalies();
         }
 
         private String convertToString(long unix){
@@ -477,6 +474,7 @@ public class DataController implements Initializable, Observer {
                         Platform.runLater(() -> pulsGraf.getData().add(new XYChart.Data(convertToString(pulsData.getTime()), pulsData.getPuls())));
                         user.uploadLog(patient.getId(), (SQLData) pulsData);
                 }
+                checkForAnomalies();
         }
 
         public void setSpO2Data(SpO2Data spO2Data) {
@@ -485,6 +483,7 @@ public class DataController implements Initializable, Observer {
                         Platform.runLater(() -> spO2Graf.getData().add(new XYChart.Data(convertToString(spO2Data.getTime()),spO2Data.getSpO2())));
                         user.uploadLog(patient.getId(), (SQLData) spO2Data);
                 }
+                checkForAnomalies();
         }
 
         public void setTempData(TempData tempData) {
@@ -493,6 +492,7 @@ public class DataController implements Initializable, Observer {
                         Platform.runLater(() -> tempGraf.getData().add(new XYChart.Data(convertToString(tempData.getTime()), tempData.getTemp())));
                         user.uploadLog(patient.getId(), (SQLData) tempData);
                 }
+                checkForAnomalies();
         }
 
 
