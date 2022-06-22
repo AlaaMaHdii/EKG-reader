@@ -127,7 +127,7 @@ public class SensorRecorder implements Runnable {
 
                 // Separate thread code
                 int errors = 0; // increment each time we get an error, if this exceeds 3 times, we reset!
-                while (serialPort != null && serialPort.isOpen()) {
+                while (serialPort != null && serialPort.isOpen() && errors != 3) {
                     // data er klart
                     try {
                         // nanoTime giver ikke UTC time
@@ -141,8 +141,6 @@ public class SensorRecorder implements Runnable {
                         }
                     }
                 }
-                // SerialPort er blevet null eller lukket
-                resetSerialConnection();
             }
 
         }catch (Exception ex){

@@ -422,7 +422,7 @@ public class DataController implements Initializable, Observer {
         public void cleanUpGraphs(){
                 for(int i = 0; i < graph.getData().size(); i++){
                         int finalI = i;
-                        if(graph.getData().get(finalI).getData().size() > 2000) {
+                        if(graph.getData().get(finalI).getData().size() > 400) {
                                 // denne kode køres i en thread. Vi prøver at undgå en race condition her.
                                 //graph.setAnimated(false);
                                 Platform.runLater(() -> graph.getData().get(finalI).getData().remove(0));
