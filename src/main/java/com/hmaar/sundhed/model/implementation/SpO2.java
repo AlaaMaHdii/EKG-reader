@@ -45,6 +45,7 @@ public class SpO2 implements SpO2Data, SQLData {
     @Override
     public String getType() {
         return type;
-    }
+    }// @Author Alaa Mahdi
+
 
 }

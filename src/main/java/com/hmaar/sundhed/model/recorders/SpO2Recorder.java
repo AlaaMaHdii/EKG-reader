@@ -2,6 +2,7 @@ package com.hmaar.sundhed.model.recorders;
 
 import com.hmaar.sundhed.model.DataPublisher;
 import com.hmaar.sundhed.model.implementation.SpO2;
+// @Author Alaa Mahdi
 
 public class SpO2Recorder {
     private DataPublisher subject;

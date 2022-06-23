@@ -11,6 +11,8 @@ import java.time.temporal.Temporal;
 import java.util.ArrayList;
 import java.util.Date;
 
+// @Author Alaa Mahdi
+
 public class Patient {
     public String cpr;
 

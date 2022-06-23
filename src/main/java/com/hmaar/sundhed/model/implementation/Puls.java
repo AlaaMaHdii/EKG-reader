@@ -2,6 +2,7 @@ package com.hmaar.sundhed.model.implementation;
 
 import com.hmaar.sundhed.model.interfaces.PulsData;
 import com.hmaar.sundhed.model.interfaces.SQLData;
+// @Author Alaa Mahdi
 
 public class Puls implements PulsData, SQLData {
     private double puls;

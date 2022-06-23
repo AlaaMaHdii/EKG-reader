@@ -11,6 +11,7 @@ import com.hmaar.sundhed.model.interfaces.TempData;
 
 import java.sql.Date;
 import java.sql.Timestamp;
+// @Author Alaa Mahdi
 
 public class Log {
     public int id;

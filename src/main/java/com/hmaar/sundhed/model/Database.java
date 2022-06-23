@@ -5,6 +5,7 @@ import com.hmaar.sundhed.model.interfaces.SQLData;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+// @Author Alaa Mahdi
 
 public class Database {
     public Connection conn;
@@ -144,7 +145,7 @@ public class Database {
     }
 
 
-    public boolean uploadWarning(int patientId, AuthenticatedUser user, String warning, String comment, double value, long timestamp){
+    public boolean uploadWarning(int patientId, AuthenticatedUser user, String warning, String comment, long timestamp){
         PreparedStatement pstmt = null;
         try {
             pstmt = this.conn.prepareStatement("INSERT INTO warnings (patientId, staffWhoLogged, warning, comment, timestamp, value) VALUES (?, ?, ?, ?, ?, ?);");
@@ -153,7 +154,6 @@ public class Database {
             pstmt.setString(3, warning);
             pstmt.setString(4, comment);
             pstmt.setTimestamp(5, new Timestamp(System.currentTimeMillis()));
-            pstmt.setDouble(6, value);
             return pstmt.execute();
         } catch (SQLException e) {
             throw new RuntimeException(e);

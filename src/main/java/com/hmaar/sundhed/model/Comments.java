@@ -4,6 +4,7 @@ package com.hmaar.sundhed.model;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+// @Author Alaa Mahdi
 
 public class Comments {
     int id;

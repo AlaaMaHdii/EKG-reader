@@ -16,8 +16,10 @@ class ConnectionToDatabase {
     void connectToDb() throws SQLException {
         long start = System.currentTimeMillis();
         db.connectToDb();
+        // Mål hvor lang tid det tog
         long slut = System.currentTimeMillis();
         long timeElapsed = slut - start;
+        // Tjek om det overholdte kravet
         Assertions.assertFalse(db.conn.isClosed());
         Assertions.assertTrue(timeElapsed < 300);
         System.out.println("Connection to MySQL server took: " + timeElapsed + "ms");

@@ -11,6 +11,8 @@ import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+// @Author Alaa Mahdi
+
 
 public class AuthenticatedUser {
     private Database db;
@@ -50,20 +52,21 @@ public class AuthenticatedUser {
     public Long lastWarningTempDate;
     public Long lastWarningSpO2Date;
 
-    public boolean uploadWarning(int patientId, String warning, String comment, double value, long time, DataController dataController){
+    public boolean uploadWarning(int patientId, String warning, String comment, DataController dataController){
+        long time = System.currentTimeMillis();
         if(lastWarningPulsDate == null || warning.contains("Puls") && System.currentTimeMillis()  >= ( lastWarningPulsDate + (30*1000))){
             lastWarningPulsDate = System.currentTimeMillis();
-            boolean result =  this.db.uploadWarning(patientId, this, warning, comment, value, time);
+            boolean result =  this.db.uploadWarning(patientId, this, warning, comment, time);
             dataController.loadDataToTable();
             return result;
         } else if(lastWarningTempDate == null || warning.contains("Temp") && System.currentTimeMillis()  >= ( lastWarningTempDate + (30*1000))){
             lastWarningTempDate = System.currentTimeMillis();
-            boolean result =  this.db.uploadWarning(patientId, this, warning, comment, value, time);
+            boolean result =  this.db.uploadWarning(patientId, this, warning, comment, time);
             dataController.loadDataToTable();
             return result;
         }else if(lastWarningSpO2Date == null || warning.contains("SpO2") && System.currentTimeMillis()  >= ( lastWarningSpO2Date + (30*1000))){
             lastWarningSpO2Date = System.currentTimeMillis();
-            boolean result =  this.db.uploadWarning(patientId, this, warning, comment, value, time);
+            boolean result =  this.db.uploadWarning(patientId, this, warning, comment, time);
             dataController.loadDataToTable();
             return result;
         }

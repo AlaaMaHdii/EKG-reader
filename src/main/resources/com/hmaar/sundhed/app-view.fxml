@@ -32,33 +32,15 @@
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -->
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.chart.CategoryAxis?>
-<?import javafx.scene.chart.LineChart?>
-<?import javafx.scene.chart.NumberAxis?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.CheckBox?>
-<?import javafx.scene.control.DatePicker?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Menu?>
-<?import javafx.scene.control.MenuBar?>
-<?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.SeparatorMenuItem?>
-<?import javafx.scene.control.SplitPane?>
-<?import javafx.scene.control.Tab?>
-<?import javafx.scene.control.TabPane?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.paint.Color?>
-<?import javafx.scene.text.Font?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.text.*?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
     <children>
         <MenuBar fx:id="menuBar" prefHeight="14.0" prefWidth="900.0" VBox.vgrow="NEVER">
             <menus>
@@ -73,7 +55,7 @@
                     <items>
                         <Menu fx:id="connectSubMenu" mnemonicParsing="false" text="Forbind" />
                         <MenuItem fx:id="reloadMenuItem" mnemonicParsing="false" onAction="#setupSensors" text="Genopfrisk" />
-                        <MenuItem fx:id="disconnectMenuItem" disable="true" onAction="#disconnectFromSensor" mnemonicParsing="false" text="Afbryd forbindelse" />
+                        <MenuItem fx:id="disconnectMenuItem" disable="true" mnemonicParsing="false" onAction="#disconnectFromSensor" text="Afbryd forbindelse" />
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Hjælp">
@@ -213,7 +195,7 @@
                                 <Font size="25.0" />
                             </font>
                         </Label>
-                        <Label fx:id="tempLabel" layoutX="170.0" layoutY="522.0" text="?°C" textFill="#1ab736">
+                        <Label fx:id="tempLabel" layoutX="170.0" layoutY="522.0" text="?°C" textFill="RED">
                             <font>
                                 <Font name="System Bold" size="12.0" />
                             </font>

@@ -10,6 +10,7 @@ import com.hmaar.sundhed.model.recorders.*;
 
 import javax.xml.crypto.Data;
 import java.util.ArrayList;
+// @Author Alaa Mahdi
 
 public class DataPublisher implements Subject {
 

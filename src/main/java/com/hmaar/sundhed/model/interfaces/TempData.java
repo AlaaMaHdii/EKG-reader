@@ -1,4 +1,6 @@
 package com.hmaar.sundhed.model.interfaces;
+// @Author Alaa Mahdi
+
 
 public interface TempData {
     void setTemp(double voltage);

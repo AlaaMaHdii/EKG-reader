@@ -6,6 +6,7 @@ import com.hmaar.sundhed.model.interfaces.EKGData;
 
 import java.util.LinkedList;
 import java.util.List;
+// @Author Alaa Mahdi
 
 public class EkgConsumer implements Runnable{
     private static final int MAX_SIZE = 1500;
@@ -109,13 +110,8 @@ public class EkgConsumer implements Runnable{
                 listCopy = new LinkedList<>(dataList);
                 dataList.clear();
             }
-            long start = System.currentTimeMillis();
             // Process data
-            if(listCopy != null) {
-                dc.setEkgData(listCopy);
-                long finish = System.currentTimeMillis();
-                long timeElapsed = finish - start;
-            }
+            dc.setEkgData(listCopy);
             //find bpm
             //calculateBPM();
         }

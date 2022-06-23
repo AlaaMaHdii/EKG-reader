@@ -10,6 +10,7 @@ import com.hmaar.sundhed.model.implementation.EKG;
 import javafx.application.Platform;
 
 import java.io.*;
+// @Author Alaa Mahdi
 
 public class SensorFileRecorder extends SensorRecorder {
     private DataPublisher subject;

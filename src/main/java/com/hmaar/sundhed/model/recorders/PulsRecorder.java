@@ -2,6 +2,7 @@ package com.hmaar.sundhed.model.recorders;
 
 import com.hmaar.sundhed.model.DataPublisher;
 import com.hmaar.sundhed.model.implementation.Puls;
+// @Author Alaa Mahdi
 
 public class PulsRecorder {
     private DataPublisher subject;

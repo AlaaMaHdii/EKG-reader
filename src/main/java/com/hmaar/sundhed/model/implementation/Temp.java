@@ -2,6 +2,7 @@ package com.hmaar.sundhed.model.implementation;
 
 import com.hmaar.sundhed.model.interfaces.SQLData;
 import com.hmaar.sundhed.model.interfaces.TempData;
+// @Author Alaa Mahdi
 
 public class Temp implements TempData, SQLData {
     private double temp;

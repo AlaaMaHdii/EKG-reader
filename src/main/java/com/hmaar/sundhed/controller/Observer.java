@@ -5,6 +5,7 @@ import com.hmaar.sundhed.model.interfaces.PulsData;
 import com.hmaar.sundhed.model.interfaces.TempData;
 import com.hmaar.sundhed.model.interfaces.SpO2Data;
 
+// @Author Alaa Mahdi
 
 // Det her er vores listener interface
 public interface Observer {

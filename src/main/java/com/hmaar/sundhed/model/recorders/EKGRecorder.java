@@ -4,6 +4,7 @@ import com.hmaar.sundhed.controller.Observer;
 import com.hmaar.sundhed.model.DataPublisher;
 import com.hmaar.sundhed.model.Subject;
 import com.hmaar.sundhed.model.implementation.EKG;
+// @Author Alaa Mahdi
 
 public class EKGRecorder {
     private DataPublisher subject;

@@ -2,6 +2,7 @@ package com.hmaar.sundhed.model.recorders;
 
 import com.hmaar.sundhed.model.DataPublisher;
 import com.hmaar.sundhed.model.implementation.Temp;
+// @Author Alaa Mahdi
 
 public class TempRecorder {
     private DataPublisher subject;

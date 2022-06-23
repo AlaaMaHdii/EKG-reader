@@ -2,6 +2,7 @@ package com.hmaar.sundhed.model.implementation;
 
 import com.hmaar.sundhed.model.interfaces.EKGData;
 import com.hmaar.sundhed.model.interfaces.SQLData;
+// @Author Alaa Mahdi
 
 public class EKG implements EKGData, SQLData {
     private final boolean ADCConverted;

@@ -11,6 +11,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 
+// @Author Alaa Mahdi
+
 public class SensorRecorder implements Runnable {
     private DataPublisher subject;
     private BufferedReader reader;

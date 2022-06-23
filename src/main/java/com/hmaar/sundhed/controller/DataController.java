@@ -22,6 +22,7 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.util.*;
 
+// @Author Alaa Mahdi
 
 public class DataController implements Initializable, Observer {
         // Realtime data
@@ -361,11 +362,11 @@ public class DataController implements Initializable, Observer {
                 if(pulsData != null && pulsLabel != null) {
                         if (pulsData.getPuls() < 50 || pulsData.getPuls() > 130) {
                                 // kritisk
-                                user.uploadWarning(patient.getId(), "Puls er kritisk: " + (double) Math.round(pulsData.getPuls() * 100) / 100 + "BPM", "", pulsData.getPuls(), pulsData.getTime(), this);
+                                user.uploadWarning(patient.getId(), "Puls er kritisk: " + (double) Math.round(pulsData.getPuls() * 100) / 100 + "BPM", "", this);
                                 Platform.runLater(() -> pulsLabel.setTextFill(red));
                         } else if (pulsData.getPuls() < 60 || pulsData.getPuls() > 100) {
                                 // info
-                                user.uploadWarning(patient.getId(), "Puls er unormal: " + (double) Math.round(pulsData.getPuls() * 100) / 100 + "BPM", "", pulsData.getPuls(),pulsData.getTime(), this);
+                                user.uploadWarning(patient.getId(), "Puls er unormal: " + (double) Math.round(pulsData.getPuls() * 100) / 100 + "BPM", "", this);
                                 Platform.runLater(() -> pulsLabel.setTextFill(yellow));
                         } else if (pulsData.getPuls() > 60 || pulsData.getPuls() < 130) {
                                 // ok
@@ -377,10 +378,10 @@ public class DataController implements Initializable, Observer {
                 if(tempData != null && tempLabel != null) {
                         if (tempData.getTemp() < 36 || tempData.getTemp() > 39) {
                                 // kritisk
-                                user.uploadWarning(patient.getId(),"Temperatur er kritisk: " + (double) Math.round(tempData.getTemp() * 100) / 100 + "°C", "", tempData.getTemp(), tempData.getTime(), this);
+                                user.uploadWarning(patient.getId(),"Temperatur er kritisk: " + (double) Math.round(tempData.getTemp() * 100) / 100 + "°C", "", this);
                                 Platform.runLater(() -> tempLabel.setTextFill(red));
                         } else if (tempData.getTemp() == 36 || tempData.getTemp() == 39) {
-                                user.uploadWarning(patient.getId(), "Temperatur er unormal: " + (double) Math.round(tempData.getTemp() * 100) / 100 + "°C", "", tempData.getTemp(),tempData.getTime(), this);
+                                user.uploadWarning(patient.getId(), "Temperatur er unormal: " + (double) Math.round(tempData.getTemp() * 100) / 100 + "°C", "", this);
                                 // info
                                 Platform.runLater(() -> tempLabel.setTextFill(yellow));
                         } else if (tempData.getTemp() == 37 || tempData.getTemp() == 39) {
@@ -393,10 +394,10 @@ public class DataController implements Initializable, Observer {
                 if(spO2Data != null && tempLabel != null) {
                         if (spO2Data.getSpO2() < 94) {
                                 // kritisk
-                                user.uploadWarning(patient.getId(), "SpO2 er kritisk: " + (double) Math.round(spO2Data.getSpO2() * 100) / 100 + "%", "", spO2Data.getSpO2(), spO2Data.getTime(),this);
+                                user.uploadWarning(patient.getId(), "SpO2 er kritisk: " + (double) Math.round(spO2Data.getSpO2() * 100) / 100 + "%", "",this);
                                 Platform.runLater(() -> spO2Label.setTextFill(red));
                         } else if (spO2Data.getSpO2() >= 94 || spO2Data.getSpO2() < 96) {
-                                user.uploadWarning(patient.getId(), "SpO2 er unormal: " + (double) Math.round(spO2Data.getSpO2() * 100) / 100 + "%", "", spO2Data.getSpO2(),spO2Data.getTime(),this);
+                                user.uploadWarning(patient.getId(), "SpO2 er unormal: " + (double) Math.round(spO2Data.getSpO2() * 100) / 100 + "%", "",this);
                                 // info
                                 Platform.runLater(() -> spO2Label.setTextFill(yellow));
                         } else if (spO2Data.getSpO2() == 100 || spO2Data.getSpO2() >= 97) {
@@ -434,8 +435,8 @@ public class DataController implements Initializable, Observer {
         private String convertToString(long unix){
                 Date date = new java.sql.Date(unix);
                 SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss.SSS", Locale.getDefault());
-                return Instant.now().toString();
-                //return formatter.format(date);
+                //return Instant.now().toString();
+                return formatter.format(date);
         }
 
         private String convertToStringHistoric(long unix){
